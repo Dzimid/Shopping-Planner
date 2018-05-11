@@ -13,7 +13,25 @@
 </head>
 <body>
 <div class="container">
+    <div class="row" style="height: 200px">
+        {#<div class="col-12" style="background-image: url('bundles/app/img/food-healthy-vegetables-potatoes.jpg')">#}
+        <div class="col-12" style="background-color: #5eb5e0">
+            Header
+            {#<img src="{{ asset('bundles/app/img/food-healthy-vegetables-potatoes.jpg') }}" style="height: 100px; height: 100px;">#}
+        </div>
+    </div>
+    <div class="row main-menu" style="background-color: yellow; padding: 5px;">
+        <div class="col-12">
+            <a href="{{ path('home_page') }}">Home</a>
+            <a href="{{ path('map_page') }}">Mapa</a>
+        </div>
+    </div>
     {% block body %}{% endblock %}
+    <div class="row">
+        <div class="col-12" style="background-color: #1c7430; height: 150px;">
+            Stopka
+        </div>
+    </div>
     {% block javascripts %}{% endblock %}
 </div>
 </body>
