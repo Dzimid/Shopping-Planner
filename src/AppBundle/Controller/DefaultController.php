@@ -16,4 +16,9 @@ class DefaultController extends Controller
     {
         return $this->render("map.html.twig");
     }
+
+    public function placesAction()
+    {
+        return $this->render('places.html.twig');
+    }
 }
