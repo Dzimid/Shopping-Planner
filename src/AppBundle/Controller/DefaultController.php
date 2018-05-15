@@ -19,11 +19,30 @@ class DefaultController extends Controller
         return $this->render("map.html.twig");
     }
 
-    public function placesAction()
+    public function placesAction(Request $request)
     {
         $place = new Place();
         $form = $this->createForm(PlaceForm::class, $place);
+        $form->handleRequest($request);
+        $resp = "";
 
-        return $this->render('places.html.twig', array('form' => $form->createView()));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userId = $this->getUser();
+
+            if (!empty($userId)) {
+                $place = $form->getData();
+                $place->setModerator($this->getUser());
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($place);
+                $entityManager->flush();
+
+                $resp = "Dodano miejsce id = " . $place->getId();
+            } else {
+                $resp = "Zaloguj się";
+            }
+        }
+
+        return $this->render('places.html.twig', array('form' => $form->createView(), 'resp' => $resp));
     }
 }
