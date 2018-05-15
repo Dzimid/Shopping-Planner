@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Place;
+use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,6 +21,9 @@ class DefaultController extends Controller
 
     public function placesAction()
     {
-        return $this->render('places.html.twig');
+        $place = new Place();
+        $form = $this->createForm(PlaceForm::class, $place);
+
+        return $this->render('places.html.twig', array('form' => $form->createView()));
     }
 }
