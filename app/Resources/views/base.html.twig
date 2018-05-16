@@ -155,12 +155,12 @@
 
     {#MENU#}
     <div class="row main-menu" style="background-color: yellow; padding: 5px; font-size: medium">
-        <div class="col-sm-10">
+        <div class="col-sm-8">
             <a href="{{ path('home_page') }}">Home</a>
             <a href="{{ path('map_page') }}">Mapa</a>
             <a href="{{ path('places_page') }}">Miejsca</a>
         </div>
-        <div class="col-sm-2" style="text-align: right">
+        <div class="col-sm-4" style="text-align: right">
             <div>
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                     {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
@@ -171,6 +171,7 @@
                 {% else %}
                     <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
                     <span class="glyphicon glyphicon-log-in"></span>
+                    <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>
                 {% endif %}
             </div>
         </div>
