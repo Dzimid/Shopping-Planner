@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>
+        Miejsce o nazwie {{ placeInfo.name }}
+    </h1>
+    <br>
+    <div>Opis miejsca: {{ placeInfo.description }}</div>
+    <div>Moderator: {{ placeInfo.moderator }}</div>
+
+    <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+

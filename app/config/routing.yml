@@ -10,6 +10,16 @@ map_page:
     path: map/
     defaults: {_controller: AppBundle:Default:map}
 
+places_page:
+    path: places/
+    defaults: {_controller: AppBundle:Default:places}
+
+place_page:
+    path: place/{id}
+    defaults: {_controller: AppBundle:Default:place}
+
+#FOS
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
