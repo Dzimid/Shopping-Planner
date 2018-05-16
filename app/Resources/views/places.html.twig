@@ -25,7 +25,11 @@
                 </div>
             {% endfor %}
             <h3>Dodaj miejsce</h3>
-            {{ form(form) }}
+            {{ form_start(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.description) }}
+                {{ form_row(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}
