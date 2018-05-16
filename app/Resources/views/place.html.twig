@@ -17,8 +17,35 @@
             <div>Moderator: {{ placeInfo.moderator }}</div>
             <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
         </div>
+
         <div class="col-4" style="background-color: #b9bbbe">
+            {#ALERTS#}
+
+            {% for msg in app.session.flashBag.get('addUserToPlaceOK') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+
+            {% for msg in app.session.flashBag.get('addUserToPlaceERROR') %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+
             <h5>Użytkownicy:</h5>
+
+            {% for user in usersInPlace %}
+                {{ user }}<br>
+            {% endfor %}
+
+            <hr>
             {{ form(form) }}
         </div>
     </div>

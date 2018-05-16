@@ -62,10 +62,16 @@ class DefaultController extends Controller
             ->getRepository(Place::class)
             ->find($id);
 
+        $usersInPlace = array();
+
+        foreach ($place->getUsers() as $usr) {
+            $usersInPlace[] = $usr;
+        }
+
         $placeInfo = array(
             'name' => $place->getName(),
             'description' => $place->getDescription(),
-            'moderator' => $place->getModerator()
+            'moderator' => $place->getModerator(),
         );
 
         $form = $this->createFormBuilder()
@@ -81,13 +87,26 @@ class DefaultController extends Controller
                 ->getRepository(User::class)
                 ->findOneByUsername($form->getData()['user_name']);
 
-            $place->setUsers(array($user));
-            $user->setPlaces(array($place));
-            $em->persist($place);
-            $em->persist($user);
-            $em->flush();
+            if (empty($user)) {
+                $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
+            } else {
+                $place->setUsers(array($user));
+                $user->setPlaces(array($place));
+                $em->persist($place);
+                $em->persist($user);
+                $em->flush();
+
+                $this->addFlash('addUserToPlaceOK', "Dodano użytkownika {$user->getUsername()} do tego miejsca");
+                return $this->redirectToRoute('place_page', array('id' => $id));
+            }
         }
 
-        return $this->render('place.html.twig', array('placeInfo' => $placeInfo, 'form' => $form->createView()));
+        return $this->render('place.html.twig',
+            array(
+                'placeInfo' => $placeInfo,
+                'form' => $form->createView(),
+                'usersInPlace' => $usersInPlace
+            )
+        );
     }
 }
