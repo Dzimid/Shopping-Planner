@@ -28,7 +28,7 @@ class DefaultController extends Controller
 
         $places = array();
 
-        foreach ($user->getPlaces() as $place) {
+        foreach ($user->getModerated() as $place) {
             $places[] = array('name' => $place->getName(), 'id' => $place->getid());
         }
 

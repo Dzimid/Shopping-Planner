@@ -23,12 +23,24 @@ class User extends BaseUser
      * One User many Places
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Place", mappedBy="moderator")
      */
+    private $moderated;
+
+    /**
+     * Many users many places
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Place", inversedBy="users")
+     * @ORM\JoinTable(name="users_places")
+     */
     private $places;
 
+    /*************************************/
+
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
         parent::__construct();
-        $this->places = new ArrayCollection();
+        $this->moderated = new ArrayCollection();
     }
 
     /**
@@ -42,8 +54,8 @@ class User extends BaseUser
     /**
      * @return mixed
      */
-    public function getPlaces()
+    public function getModerated()
     {
-        return $this->places;
+        return $this->moderated;
     }
 }

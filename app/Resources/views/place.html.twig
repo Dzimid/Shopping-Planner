@@ -1,14 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>
-        Miejsce o nazwie {{ placeInfo.name }}
-    </h1>
-    <br>
-    <div>Opis miejsca: {{ placeInfo.description }}</div>
-    <div>Moderator: {{ placeInfo.moderator }}</div>
-
-    <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+    <div class="row">
+        <div class="col-8">
+            <h1>
+                Miejsce o nazwie {{ placeInfo.name }}
+            </h1>
+            <br>
+            <div>Opis miejsca: {{ placeInfo.description }}</div>
+            <div>Moderator: {{ placeInfo.moderator }}</div>
+            <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+        </div>
+        <div class="col-4" style="text-align: right; background-color: #b9bbbe;">
+            <h5>Użytkownicy:</h5>
+        </div>
+    </div>
 
 {% endblock %}
 
