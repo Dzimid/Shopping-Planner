@@ -8,14 +8,14 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-9">
+        <div class="col-sm-9">
             Lista Twoich miejsc:
             <br>
             {% for place in places %}
                 <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
             {% endfor %}
         </div>
-        <div class="col-3">
+        <div class="col-sm-3">
             {% for msg in app.session.flashBag.get('newPlace') %}
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>{{ msg }}</strong>
