@@ -14,6 +14,10 @@ places_page:
     path: places/
     defaults: {_controller: AppBundle:Default:places}
 
+place_page:
+    path: place/{id}
+    defaults: {_controller: AppBundle:Default:place}
+
 #FOS
 
 fos_user_security:

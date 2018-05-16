@@ -7,11 +7,16 @@ Twoje miejsca
 {% endblock %}
 
 {% block body %}
-    {{ resp }}
+    {#{{ resp }}#}
+    {#<br>#}
+    {#{{ form_start(form) }}#}
+    {#{{ form_widget(form) }}#}
+    {#{{ form_end(form) }}#}
+    Lista Twoich miejsc:
     <br>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+    {% for place in places %}
+        <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
+    {% endfor %}
 
 {% endblock %}
 

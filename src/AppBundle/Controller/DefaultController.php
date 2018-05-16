@@ -3,8 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Place;
+use AppBundle\Entity\User;
 use AppBundle\Form\PlaceForm;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -19,30 +22,33 @@ class DefaultController extends Controller
         return $this->render("map.html.twig");
     }
 
-    public function placesAction(Request $request)
+    public function placesAction()         // TODO: Zabezpieczyć tę akcje
     {
-        $place = new Place();
-        $form = $this->createForm(PlaceForm::class, $place);
-        $form->handleRequest($request);
-        $resp = "";
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($this->getUser());
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userId = $this->getUser();
+        $places = array();
 
-            if (!empty($userId)) {
-                $place = $form->getData();
-                $place->setModerator($this->getUser());
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($place);
-                $entityManager->flush();
-
-                $resp = "Dodano miejsce id = " . $place->getId();
-            } else {
-                $resp = "Zaloguj się";
-            }
+        foreach ($user->getPlaces() as $place) {
+            $places[] = array('name' => $place->getName(), 'id' => $place->getid());
         }
 
-        return $this->render('places.html.twig', array('form' => $form->createView(), 'resp' => $resp));
+        return $this->render('places.html.twig', array('places' => $places));
+    }
+
+    public function placeAction($id)        // TODO: Zabezpieczyć tę akcje
+    {
+        $place = $this->getDoctrine()
+            ->getRepository(Place::class)
+            ->find($id);
+
+        $placeInfo = array(
+            'name' => $place->getName(),
+            'description' => $place->getDescription(),
+            'moderator' => $place->getModerator()
+        );
+
+        return $this->render('place.html.twig', array('placeInfo' => $placeInfo));
     }
 }
