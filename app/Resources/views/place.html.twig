@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+
+    Miejsce {{ placeInfo.name }}
+
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <div class="col-8">
@@ -11,8 +17,9 @@
             <div>Moderator: {{ placeInfo.moderator }}</div>
             <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
         </div>
-        <div class="col-4" style="text-align: right; background-color: #b9bbbe;">
+        <div class="col-4" style="background-color: #b9bbbe">
             <h5>Użytkownicy:</h5>
+            {{ form(form) }}
         </div>
     </div>
 

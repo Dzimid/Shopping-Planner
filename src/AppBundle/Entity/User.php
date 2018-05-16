@@ -41,6 +41,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->moderated = new ArrayCollection();
+        $this->places = new ArrayCollection();
     }
 
     /**
@@ -57,5 +58,21 @@ class User extends BaseUser
     public function getModerated()
     {
         return $this->moderated;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlaces()
+    {
+        return $this->places;
+    }
+
+    /**
+     * @param mixed $places
+     */
+    public function setPlaces($places)
+    {
+        $this->places = $places;
     }
 }

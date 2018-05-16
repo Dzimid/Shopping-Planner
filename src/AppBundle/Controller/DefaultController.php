@@ -6,6 +6,8 @@ use AppBundle\Entity\Place;
 use AppBundle\Entity\User;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -54,7 +56,7 @@ class DefaultController extends Controller
         return $this->render('places.html.twig', array('places' => $places, 'form' => $form->createView()));
     }
 
-    public function placeAction($id)        // TODO: Zabezpieczyć tę akcje
+    public function placeAction($id, Request $request)        // TODO: Zabezpieczyć tę akcje
     {
         $place = $this->getDoctrine()
             ->getRepository(Place::class)
@@ -66,6 +68,26 @@ class DefaultController extends Controller
             'moderator' => $place->getModerator()
         );
 
-        return $this->render('place.html.twig', array('placeInfo' => $placeInfo));
+        $form = $this->createFormBuilder()
+            ->add('user_name', TextType::class, array('label' => 'Dodaj użytkownika', 'required' => true))
+            ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->findOneByUsername($form->getData()['user_name']);
+
+            $place->setUsers(array($user));
+            $user->setPlaces(array($place));
+            $em->persist($place);
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return $this->render('place.html.twig', array('placeInfo' => $placeInfo, 'form' => $form->createView()));
     }
 }
