@@ -2,22 +2,32 @@
 
 {% block title %}
 
-Twoje miejsca
+    Twoje miejsca
 
 {% endblock %}
 
 {% block body %}
-    {#{{ resp }}#}
-    {#<br>#}
-    {#{{ form_start(form) }}#}
-    {#{{ form_widget(form) }}#}
-    {#{{ form_end(form) }}#}
-    Lista Twoich miejsc:
-    <br>
-    {% for place in places %}
-        <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
-    {% endfor %}
-
+    <div class="row">
+        <div class="col-9">
+            Lista Twoich miejsc:
+            <br>
+            {% for place in places %}
+                <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
+            {% endfor %}
+        </div>
+        <div class="col-3">
+            {% for msg in app.session.flashBag.get('newPlace') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+            <h3>Dodaj miejsce</h3>
+            {{ form(form) }}
+        </div>
+    </div>
 {% endblock %}
 
 {% block stylesheets %}
