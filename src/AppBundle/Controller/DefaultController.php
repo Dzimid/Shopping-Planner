@@ -6,6 +6,8 @@ use AppBundle\Entity\Place;
 use AppBundle\Entity\User;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -28,7 +30,7 @@ class DefaultController extends Controller
 
         $places = array();
 
-        foreach ($user->getPlaces() as $place) {
+        foreach ($user->getModerated() as $place) {
             $places[] = array('name' => $place->getName(), 'id' => $place->getid());
         }
 
@@ -54,18 +56,77 @@ class DefaultController extends Controller
         return $this->render('places.html.twig', array('places' => $places, 'form' => $form->createView()));
     }
 
-    public function placeAction($id)        // TODO: Zabezpieczyć tę akcje
+    public function placeAction($id, Request $request)        // TODO: Zabezpieczyć tę akcje
     {
         $place = $this->getDoctrine()
             ->getRepository(Place::class)
             ->find($id);
 
+        $usersInPlace = array();
+
+        foreach ($place->getUsers() as $usr) {
+            $usersInPlace[] = $usr;
+        }
+
         $placeInfo = array(
+            'id' => $place->getId(),
             'name' => $place->getName(),
             'description' => $place->getDescription(),
-            'moderator' => $place->getModerator()
+            'moderator' => $place->getModerator(),
         );
 
-        return $this->render('place.html.twig', array('placeInfo' => $placeInfo));
+        $form = $this->createFormBuilder()
+            ->add('user_name', TextType::class, array('label' => 'Dodaj użytkownika', 'required' => true))
+            ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->findOneByUsername($form->getData()['user_name']);
+
+            if (empty($user)) {
+                $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
+            } else {
+                $place->setUsers(array($user));
+                $user->setPlaces(array($place));
+                $em->persist($place);
+                $em->persist($user);
+                $em->flush();
+
+                $this->addFlash('addUserToPlaceOK', "Dodano użytkownika {$user->getUsername()} do tego miejsca");
+                return $this->redirectToRoute('place_page', array('id' => $id));
+            }
+        }
+
+        return $this->render('place.html.twig',
+            array(
+                'placeInfo' => $placeInfo,
+                'form' => $form->createView(),
+                'usersInPlace' => $usersInPlace
+            )
+        );
+    }
+
+    public function removeUserFromPlaceAction($p_id, $u_id)
+    {
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findOneByUsername($u_id);
+
+        $place = $this->getDoctrine()
+            ->getRepository(Place::class)
+            ->find($p_id);
+
+        $user->removePlace($place);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
+        return $this->redirectToRoute('place_page', array('id' => $p_id));
     }
 }

@@ -35,10 +35,18 @@ class Place
 
     /**
      * Many Places one User
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="places")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="moderated")
      * @ORM\JoinColumn(name="moderator", referencedColumnName="id")
      */
     private $moderator;
+
+    /**
+     * Many places many users
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="places")
+     */
+    private $users;
+
+    /***********************************/
 
     /**
      * @param string $name
@@ -94,5 +102,21 @@ class Place
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param mixed $users
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
     }
 }

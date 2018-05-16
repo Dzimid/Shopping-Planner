@@ -1,14 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <h1>
-        Miejsce o nazwie {{ placeInfo.name }}
-    </h1>
-    <br>
-    <div>Opis miejsca: {{ placeInfo.description }}</div>
-    <div>Moderator: {{ placeInfo.moderator }}</div>
+{% block title %}
 
-    <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+    Miejsce {{ placeInfo.name }}
+
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-8">
+            <h1>
+                Miejsce o nazwie {{ placeInfo.name }}
+            </h1>
+            <br>
+            <div>Opis miejsca: {{ placeInfo.description }}</div>
+            <div>Moderator: {{ placeInfo.moderator }}</div>
+            <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+        </div>
+
+        <div class="col-sm-4" style="background-color: #b9bbbe">
+            {#ALERTS#}
+
+            {% for msg in app.session.flashBag.get('addUserToPlaceOK') %}
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            {% for msg in app.session.flashBag.get('addUserToPlaceERROR') %}
+                <div class="alert alert-danger alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            <h5>Użytkownicy:</h5>
+
+            {% for user in usersInPlace %}
+                {{ user }}
+                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user}) }}" style="color: red;">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                <br>
+            {% endfor %}
+
+            <hr>
+            {{ form(form) }}
+        </div>
+    </div>
 
 {% endblock %}
 
