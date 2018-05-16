@@ -69,6 +69,7 @@ class DefaultController extends Controller
         }
 
         $placeInfo = array(
+            'id' => $place->getId(),
             'name' => $place->getName(),
             'description' => $place->getDescription(),
             'moderator' => $place->getModerator(),
@@ -108,5 +109,24 @@ class DefaultController extends Controller
                 'usersInPlace' => $usersInPlace
             )
         );
+    }
+
+    public function removeUserFromPlaceAction($p_id, $u_id)
+    {
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findOneByUsername($u_id);
+
+        $place = $this->getDoctrine()
+            ->getRepository(Place::class)
+            ->find($p_id);
+
+        $user->removePlace($place);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
+        return $this->redirectToRoute('place_page', array('id' => $p_id));
     }
 }

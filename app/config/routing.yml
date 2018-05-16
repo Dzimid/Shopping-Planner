@@ -18,6 +18,10 @@ place_page:
     path: place/{id}
     defaults: {_controller: AppBundle:Default:place}
 
+removeUserFromPlace:
+    path: plac/{p_id}/removeuser/{u_id}
+    defaults: {_controller: AppBundle:Default:removeUserFromPlace}
+
 #FOS
 
 fos_user_security:

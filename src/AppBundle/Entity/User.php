@@ -75,4 +75,15 @@ class User extends BaseUser
     {
         $this->places = $places;
     }
+
+    /**
+     * Remove place
+     *
+     * @param $place
+     * @return bool
+     */
+    public function removePlace($place)
+    {
+        return $this->places->removeElement($place);
+    }
 }

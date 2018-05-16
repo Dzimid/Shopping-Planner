@@ -8,7 +8,7 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-8">
+        <div class="col-sm-8">
             <h1>
                 Miejsce o nazwie {{ placeInfo.name }}
             </h1>
@@ -18,31 +18,31 @@
             <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
         </div>
 
-        <div class="col-4" style="background-color: #b9bbbe">
+        <div class="col-sm-4" style="background-color: #b9bbbe">
             {#ALERTS#}
 
             {% for msg in app.session.flashBag.get('addUserToPlaceOK') %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>{{ msg }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
             {% endfor %}
 
             {% for msg in app.session.flashBag.get('addUserToPlaceERROR') %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div class="alert alert-danger alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>{{ msg }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
             {% endfor %}
 
             <h5>Użytkownicy:</h5>
 
             {% for user in usersInPlace %}
-                {{ user }}<br>
+                {{ user }}
+                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user}) }}" style="color: red;">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                <br>
             {% endfor %}
 
             <hr>
