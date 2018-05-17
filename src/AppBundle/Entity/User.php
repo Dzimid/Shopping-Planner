@@ -32,6 +32,14 @@ class User extends BaseUser
      */
     private $places;
 
+    /**
+     * @var Item[]
+     *
+     * One user many purchase
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase", mappedBy="user")
+     */
+    private $boughtItems;
+
     /*************************************/
 
     /**
@@ -85,5 +93,13 @@ class User extends BaseUser
     public function removePlace($place)
     {
         return $this->places->removeElement($place);
+    }
+
+    /**
+     * @return Item[] | ArrayCollection
+     */
+    public function getBoughtItems()
+    {
+        return $this->boughtItems;
     }
 }

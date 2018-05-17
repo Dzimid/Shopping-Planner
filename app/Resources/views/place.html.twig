@@ -105,11 +105,15 @@
                                 <td>{{ item.name }}</td>
 
                                 {% for user in usersInPlace %}
-
-                                    <td>
-                                        time
-                                    </td>
-
+                                    {% if user.id == app.user.id %}
+                                        <td>
+                                            <span class="glyphicon glyphicon-shopping-cart" style="color: green; font-size: 30px"></span>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            data
+                                        </td>
+                                    {% endif %}
                                 {% endfor %}
                             </tr>
 
