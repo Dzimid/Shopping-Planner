@@ -46,6 +46,12 @@ class Place
      */
     private $users;
 
+    /**
+     * One place many items
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Item", mappedBy="place")
+     */
+    private $items;
+
     /***********************************/
 
     /**
@@ -118,5 +124,21 @@ class Place
     public function setUsers($users)
     {
         $this->users = $users;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param mixed $items
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
     }
 }
