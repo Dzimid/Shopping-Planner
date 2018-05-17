@@ -28,10 +28,14 @@ class DefaultController extends Controller
             ->getRepository(User::class)
             ->find($this->getUser());
 
+        $moderated = array();
         $places = array();
 
         foreach ($user->getModerated() as $place) {
-            $places[] = array('name' => $place->getName(), 'id' => $place->getid());
+            $moderated[] = array('name' => $place->getName(), 'id' => $place->getid());
+        }
+        foreach ($user->getPlaces() as $place) {
+            $places[] = array('name' => $place->getName(), 'id' => $place->getId());
         }
 
         //FORM
@@ -53,7 +57,7 @@ class DefaultController extends Controller
             return $this->redirectToRoute('places_page');
         }
 
-        return $this->render('places.html.twig', array('places' => $places, 'form' => $form->createView()));
+        return $this->render('places.html.twig', array('moderated' => $moderated, 'places' => $places, 'form' => $form->createView()));
     }
 
     public function placeAction($id, Request $request)        // TODO: Zabezpieczyć tę akcje
@@ -64,8 +68,13 @@ class DefaultController extends Controller
 
         $usersInPlace = array();
 
+        $qq = $place->getUsers();
+
         foreach ($place->getUsers() as $usr) {
-            $usersInPlace[] = $usr;
+            $usersInPlace[] = array(
+                'name' => $usr->getUsername(),
+                'id' => $usr->getId()
+            );
         }
 
         $placeInfo = array(
@@ -90,6 +99,8 @@ class DefaultController extends Controller
 
             if (empty($user)) {
                 $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
+            } else if ($user->getId() == $this->getUser()->getId()) {
+                $this->addFlash('addUserToPlaceERROR', 'Nie możesz dodać siebie do tej grupy');
             } else {
                 $place->setUsers(array($user));
                 $user->setPlaces(array($place));
