@@ -28,10 +28,14 @@ class DefaultController extends Controller
             ->getRepository(User::class)
             ->find($this->getUser());
 
+        $moderated = array();
         $places = array();
 
         foreach ($user->getModerated() as $place) {
-            $places[] = array('name' => $place->getName(), 'id' => $place->getid());
+            $moderated[] = array('name' => $place->getName(), 'id' => $place->getid());
+        }
+        foreach ($user->getPlaces() as $place) {
+            $places[] = array('name' => $place->getName(), 'id' => $place->getId());
         }
 
         //FORM
@@ -40,6 +44,8 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // TODO Przenieść tę logikę w inne miejsce
+
             $newPlace = new Place();
             $newPlace->setModerator($this->getUser());
             $newPlace->setName($form->getData()['name']);
@@ -53,7 +59,7 @@ class DefaultController extends Controller
             return $this->redirectToRoute('places_page');
         }
 
-        return $this->render('places.html.twig', array('places' => $places, 'form' => $form->createView()));
+        return $this->render('places.html.twig', array('moderated' => $moderated, 'places' => $places, 'form' => $form->createView()));
     }
 
     public function placeAction($id, Request $request)        // TODO: Zabezpieczyć tę akcje
@@ -65,7 +71,10 @@ class DefaultController extends Controller
         $usersInPlace = array();
 
         foreach ($place->getUsers() as $usr) {
-            $usersInPlace[] = $usr;
+            $usersInPlace[] = array(
+                'name' => $usr->getUsername(),
+                'id' => $usr->getId()
+            );
         }
 
         $placeInfo = array(
@@ -83,6 +92,10 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // TODO Przenieść tę logike w inne miejsce
+
+            $this->denyAccessUnlessGranted('edit', $place);
+
             $em = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()
                 ->getRepository(User::class)
@@ -90,6 +103,8 @@ class DefaultController extends Controller
 
             if (empty($user)) {
                 $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
+            } else if ($user->getId() == $this->getUser()->getId()) {
+                $this->addFlash('addUserToPlaceERROR', 'Nie możesz dodać siebie do tej grupy');
             } else {
                 $place->setUsers(array($user));
                 $user->setPlaces(array($place));
@@ -115,11 +130,13 @@ class DefaultController extends Controller
     {
         $user = $this->getDoctrine()
             ->getRepository(User::class)
-            ->findOneByUsername($u_id);
+            ->find($u_id);
 
         $place = $this->getDoctrine()
             ->getRepository(Place::class)
             ->find($p_id);
+
+        $this->denyAccessUnlessGranted('edit', $place);
 
         $user->removePlace($place);
         $em = $this->getDoctrine()->getManager();

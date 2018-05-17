@@ -38,8 +38,8 @@
             <h5>Użytkownicy:</h5>
 
             {% for user in usersInPlace %}
-                {{ user }}
-                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user}) }}" style="color: red;">
+                {{ user.name }}
+                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user.id}) }}" style="color: red;">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
                 <br>
