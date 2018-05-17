@@ -2,11 +2,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Item;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -68,13 +71,28 @@ class DefaultController extends Controller
             ->getRepository(Place::class)
             ->find($id);
 
+        $purchase = $this->getDoctrine()
+            ->getRepository(Purchase::class)
+            ->getAllPurchaseByPlace($place);
+
         $usersInPlace = array();
+        $itemsInPlace = array();
+        $purchasePerUser = array(array());
 
         foreach ($place->getUsers() as $usr) {
             $usersInPlace[] = array(
                 'name' => $usr->getUsername(),
                 'id' => $usr->getId()
             );
+        }
+        foreach ($place->getItems() as $itm) {
+            $itemsInPlace[] = array(
+                'name' => $itm->getName(),
+                'id' => $itm->getId()
+            );
+        }
+        foreach ($purchase as $p) {
+            $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = $p->getDate()->format('Y-m-d H:i:s');
         }
 
         $placeInfo = array(
@@ -84,22 +102,25 @@ class DefaultController extends Controller
             'moderator' => $place->getModerator(),
         );
 
-        $form = $this->createFormBuilder()
+        $em = $this->getDoctrine()->getManager();
+
+        /***USER FORM***/
+
+        $userForm = $this->createFormBuilder()
             ->add('user_name', TextType::class, array('label' => 'Dodaj użytkownika', 'required' => true))
             ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
             ->getForm();
 
-        $form->handleRequest($request);
+        $userForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
             // TODO Przenieść tę logike w inne miejsce
 
             $this->denyAccessUnlessGranted('edit', $place);
 
-            $em = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()
                 ->getRepository(User::class)
-                ->findOneByUsername($form->getData()['user_name']);
+                ->findOneByUsername($userForm->getData()['user_name']);
 
             if (empty($user)) {
                 $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
@@ -113,15 +134,43 @@ class DefaultController extends Controller
                 $em->flush();
 
                 $this->addFlash('addUserToPlaceOK', "Dodano użytkownika {$user->getUsername()} do tego miejsca");
-                return $this->redirectToRoute('place_page', array('id' => $id));
             }
+
+            return $this->redirectToRoute('place_page', array('id' => $id));
+        }
+
+        /***ITEM FORM***/
+
+        $itemForm = $this->createFormBuilder()
+            ->add('name', TextType::class, array('label' => 'Nazwa', 'required' => true))
+            ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
+            ->getForm();
+
+        $itemForm->handleRequest($request);
+
+        if ($itemForm->isSubmitted() && $itemForm->isValid()) {
+            $this->denyAccessUnlessGranted('edit', $place);
+
+            $itemFormData = $itemForm->getData();
+            $p = new Item();
+            $p->setName($itemFormData['name']);
+            $p->setPlace($place);
+
+            $em->persist($p);
+            $em->flush();
+
+            $this->addFlash('addItemToPlaceOK', 'Dodano przedmiot do tego miejca');
+            return $this->redirectToRoute('place_page', array('id' => $id));
         }
 
         return $this->render('place.html.twig',
             array(
                 'placeInfo' => $placeInfo,
-                'form' => $form->createView(),
-                'usersInPlace' => $usersInPlace
+                'userForm' => $userForm->createView(),
+                'itemForm' => $itemForm->createView(),
+                'usersInPlace' => $usersInPlace,
+                'itemsInPlace' => $itemsInPlace,
+                'purchasePerUser' => $purchasePerUser
             )
         );
     }
@@ -145,5 +194,40 @@ class DefaultController extends Controller
 
         $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
         return $this->redirectToRoute('place_page', array('id' => $p_id));
+    }
+
+    public function removeItemFromPlaceAction($p_id, $i_id)
+    {
+        $item = $this->getDoctrine()
+            ->getRepository(Item::class)
+            ->find($i_id);
+
+        $this->denyAccessUnlessGranted('edit', $item);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($item);
+        $em->flush();
+
+        $this->addFlash('addItemToPlaceOK', 'Usunięto przedmiot');
+        return $this->redirectToRoute('place_page', array('id' => $p_id));
+    }
+
+    public function addPurchaseAction($i_id)
+    {
+        $item = $this->getDoctrine()
+            ->getRepository(Item::class)
+            ->find($i_id);
+
+        $purchase = new Purchase();
+        $purchase->setDate(new \DateTime());
+        $purchase->setUser($this->getUser());
+        $purchase->setItem($item);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($purchase);
+        $em->flush();
+
+        $this->addFlash('addPurchase', 'Dodano zakup');
+        return $this->redirectToRoute('place_page', array('id' => $item->getPlace()->getId()));
     }
 }

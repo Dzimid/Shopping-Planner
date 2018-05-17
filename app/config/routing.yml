@@ -19,8 +19,17 @@ place_page:
     defaults: {_controller: AppBundle:Default:place}
 
 removeUserFromPlace:
-    path: plac/{p_id}/removeuser/{u_id}
+    path: place/{p_id}/removeuser/{u_id}
     defaults: {_controller: AppBundle:Default:removeUserFromPlace}
+
+removeItemFromPlace:
+    path: place/{p_id}/removeitem/{i_id}
+    defaults: {_controller: AppBundle:Default:removeItemFromPlace}
+
+addPurchase:
+    path: purchase/add/{i_id}
+    defaults: {_controller: AppBundle:Default:addPurchase}
+
 
 #FOS
 
