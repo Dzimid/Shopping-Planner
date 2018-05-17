@@ -81,6 +81,14 @@
             {{ form(itemForm) }}
         </div>
         <div class="col-sm-12">
+            {#ALERTS#}
+
+            {% for msg in app.session.flashBag.get('addPurchase') %}
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
             <h2>Siatka</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover">
@@ -99,27 +107,26 @@
                     </thead>
                     <tbody>
                     {% for item in itemsInPlace %}
-
                         <tr>
-
                             <td>{{ item.name }}</td>
-
                             {% for user in usersInPlace %}
-                                {% if user.id == app.user.id %}
-                                    <td>
+                                <td>
+                                    {% if user.id == app.user.id %}
                                         <a href="{{ path('addPurchase', {'i_id': item.id}) }}">
                                             <span class="glyphicon glyphicon-shopping-cart"
                                                   style="color: green; font-size: 30px"></span>
                                         </a>
-                                    </td>
-                                {% else %}
-                                    <td>
-                                        data
-                                    </td>
-                                {% endif %}
+                                    {% endif %}
+                                    {% if purchasePerUser[user.id][item.id] is defined %}
+                                        {% for d in purchasePerUser[user.id][item.id] %}
+                                            <div class="purchase-date">
+                                                {{ d }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
                             {% endfor %}
                         </tr>
-
                     {% endfor %}
                     </tbody>
                 </table>

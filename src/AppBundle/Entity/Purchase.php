@@ -74,6 +74,14 @@ class Purchase
     }
 
     /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
      * @param \DateTime $date
      */
     public function setDate($date)

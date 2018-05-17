@@ -12,4 +12,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class PurchaseRepository extends EntityRepository
 {
+    /**
+     * @param $place
+     * @return Purchase[]|array
+     */
+    public function getAllPurchaseByPlace($place)
+    {
+        $items = $place->getItems();
+        $ids = array();
+
+        foreach ($items as $item) {
+            $ids[] = $item->getId();
+        }
+
+        $purchase = $this->getEntityManager()
+            ->getRepository(Purchase::class)
+            ->findBy(array('item' => $ids));
+
+        return $purchase;
+    }
 }

@@ -71,8 +71,13 @@ class DefaultController extends Controller
             ->getRepository(Place::class)
             ->find($id);
 
+        $purchase = $this->getDoctrine()
+            ->getRepository(Purchase::class)
+            ->getAllPurchaseByPlace($place);
+
         $usersInPlace = array();
         $itemsInPlace = array();
+        $purchasePerUser = array(array());
 
         foreach ($place->getUsers() as $usr) {
             $usersInPlace[] = array(
@@ -85,6 +90,9 @@ class DefaultController extends Controller
                 'name' => $itm->getName(),
                 'id' => $itm->getId()
             );
+        }
+        foreach ($purchase as $p) {
+            $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = $p->getDate()->format('Y-m-d H:i:s');
         }
 
         $placeInfo = array(
@@ -126,15 +134,15 @@ class DefaultController extends Controller
                 $em->flush();
 
                 $this->addFlash('addUserToPlaceOK', "Dodano użytkownika {$user->getUsername()} do tego miejsca");
-                return $this->redirectToRoute('place_page', array('id' => $id));
             }
+
+            return $this->redirectToRoute('place_page', array('id' => $id));
         }
 
         /***ITEM FORM***/
 
         $itemForm = $this->createFormBuilder()
             ->add('name', TextType::class, array('label' => 'Nazwa', 'required' => true))
-            ->add('description', TextareaType::class, array('label' => 'Opis', 'required' => false))
             ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
             ->getForm();
 
@@ -144,12 +152,11 @@ class DefaultController extends Controller
             $this->denyAccessUnlessGranted('edit', $place);
 
             $itemFormData = $itemForm->getData();
-            $item = new Item();
-            $item->setName($itemFormData['name']);
-            $item->setDescription($itemFormData['description']);
-            $item->setPlace($place);
+            $p = new Item();
+            $p->setName($itemFormData['name']);
+            $p->setPlace($place);
 
-            $em->persist($item);
+            $em->persist($p);
             $em->flush();
 
             $this->addFlash('addItemToPlaceOK', 'Dodano przedmiot do tego miejca');
@@ -162,7 +169,8 @@ class DefaultController extends Controller
                 'userForm' => $userForm->createView(),
                 'itemForm' => $itemForm->createView(),
                 'usersInPlace' => $usersInPlace,
-                'itemsInPlace' => $itemsInPlace
+                'itemsInPlace' => $itemsInPlace,
+                'purchasePerUser' => $purchasePerUser
             )
         );
     }
@@ -219,7 +227,7 @@ class DefaultController extends Controller
         $em->persist($purchase);
         $em->flush();
 
-        $this->addFlash('removeItemFromPlace', 'Dodano zakup');
+        $this->addFlash('addPurchase', 'Dodano zakup');
         return $this->redirectToRoute('place_page', array('id' => $item->getPlace()->getId()));
     }
 }
