@@ -35,18 +35,72 @@
                 </div>
             {% endfor %}
 
-            <h5>Użytkownicy:</h5>
+            <h4>Użytkownicy:</h4>
 
             {% for user in usersInPlace %}
                 {{ user.name }}
-                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user.id}) }}" style="color: red;">
+                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user.id}) }}"
+                   style="color: red;">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
                 <br>
             {% endfor %}
 
             <hr>
-            {{ form(form) }}
+            {{ form(userForm) }}
+
+            <hr>
+
+            {#ALERTS#}
+
+            {% for msg in app.session.flashBag.get('addItemToPlaceOK') %}
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            {% for msg in app.session.flashBag.get('addItemToPlaceERROR') %}
+                <div class="alert alert-danger alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            <h4>Przedmioty:</h4>
+
+            {% for item in itemsInPlace %}
+                {{ item.name }}
+                <a href="{{ path('removeItemFromPlace', {'i_id': item.id, 'p_id': placeInfo.id}) }}"
+                   style="color: red;">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                <br>
+            {% endfor %}
+
+            {{ form(itemForm) }}
+        </div>
+        <div class="col-sm-12">
+            <h2>Siatka</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        {% for user in usersInPlace %}
+
+                            <td>{{ user.name }}</td>
+
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Produkt 1</td>
+                        <td>Produkt 2</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

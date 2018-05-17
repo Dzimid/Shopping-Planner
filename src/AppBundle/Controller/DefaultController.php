@@ -2,11 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Item;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\User;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -69,11 +71,18 @@ class DefaultController extends Controller
             ->find($id);
 
         $usersInPlace = array();
+        $itemsInPlace = array();
 
         foreach ($place->getUsers() as $usr) {
             $usersInPlace[] = array(
                 'name' => $usr->getUsername(),
                 'id' => $usr->getId()
+            );
+        }
+        foreach ($place->getItems() as $itm) {
+            $itemsInPlace[] = array(
+                'name' => $itm->getName(),
+                'id' => $itm->getId()
             );
         }
 
@@ -84,22 +93,25 @@ class DefaultController extends Controller
             'moderator' => $place->getModerator(),
         );
 
-        $form = $this->createFormBuilder()
+        $em = $this->getDoctrine()->getManager();
+
+        /***USER FORM***/
+
+        $userForm = $this->createFormBuilder()
             ->add('user_name', TextType::class, array('label' => 'Dodaj użytkownika', 'required' => true))
             ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
             ->getForm();
 
-        $form->handleRequest($request);
+        $userForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
             // TODO Przenieść tę logike w inne miejsce
 
             $this->denyAccessUnlessGranted('edit', $place);
 
-            $em = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()
                 ->getRepository(User::class)
-                ->findOneByUsername($form->getData()['user_name']);
+                ->findOneByUsername($userForm->getData()['user_name']);
 
             if (empty($user)) {
                 $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
@@ -117,11 +129,38 @@ class DefaultController extends Controller
             }
         }
 
+        /***ITEM FORM***/
+
+        $itemForm = $this->createFormBuilder()
+            ->add('name', TextType::class, array('label' => 'Nazwa'))
+            ->add('description', TextareaType::class, array('label' => 'Opis'))
+            ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
+            ->getForm();
+
+        $itemForm->handleRequest($request);
+
+        if ($itemForm->isSubmitted() && $itemForm->isValid()) {
+            $itemFormData = $itemForm->getData();
+
+            $item = new Item();
+            $item->setName($itemFormData['name']);
+            $item->setDescription($itemFormData['description']);
+            $item->setPlace($place);
+
+            $em->persist($item);
+            $em->flush();
+
+            $this->addFlash('addItemToPlaceOK', 'Dodano przedmiot do tego miejca');
+            return $this->redirectToRoute('place_page', array('id' => $id));
+        }
+
         return $this->render('place.html.twig',
             array(
                 'placeInfo' => $placeInfo,
-                'form' => $form->createView(),
-                'usersInPlace' => $usersInPlace
+                'userForm' => $userForm->createView(),
+                'itemForm' => $itemForm->createView(),
+                'usersInPlace' => $usersInPlace,
+                'itemsInPlace' => $itemsInPlace
             )
         );
     }
@@ -144,6 +183,21 @@ class DefaultController extends Controller
         $em->flush();
 
         $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
+        return $this->redirectToRoute('place_page', array('id' => $p_id));
+
+
+    }
+
+    public function removeItemFromPlaceAction($p_id, $i_id)
+    {
+        $item = $this->getDoctrine()
+            ->getRepository(Item::class)
+            ->find($i_id);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($item);
+        $em->flush();
+
+        $this->addFlash('addItemToPlaceOK', 'Usunięto przedmiot');
         return $this->redirectToRoute('place_page', array('id' => $p_id));
     }
 }
