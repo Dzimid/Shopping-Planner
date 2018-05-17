@@ -14,3 +14,10 @@ services:
             - { name: security.voter }
 
         public: false
+
+    app.item_voter:
+        class: AppBundle\Security\ItemVoter
+        tags:
+            - { name: security.voter }
+
+        public: false

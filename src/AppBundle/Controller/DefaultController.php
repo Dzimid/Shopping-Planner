@@ -132,16 +132,17 @@ class DefaultController extends Controller
         /***ITEM FORM***/
 
         $itemForm = $this->createFormBuilder()
-            ->add('name', TextType::class, array('label' => 'Nazwa'))
-            ->add('description', TextareaType::class, array('label' => 'Opis'))
+            ->add('name', TextType::class, array('label' => 'Nazwa', 'required' => true))
+            ->add('description', TextareaType::class, array('label' => 'Opis', 'required' => false))
             ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
             ->getForm();
 
         $itemForm->handleRequest($request);
 
         if ($itemForm->isSubmitted() && $itemForm->isValid()) {
-            $itemFormData = $itemForm->getData();
+            $this->denyAccessUnlessGranted('edit', $place);
 
+            $itemFormData = $itemForm->getData();
             $item = new Item();
             $item->setName($itemFormData['name']);
             $item->setDescription($itemFormData['description']);
@@ -184,8 +185,6 @@ class DefaultController extends Controller
 
         $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
         return $this->redirectToRoute('place_page', array('id' => $p_id));
-
-
     }
 
     public function removeItemFromPlaceAction($p_id, $i_id)
@@ -193,6 +192,9 @@ class DefaultController extends Controller
         $item = $this->getDoctrine()
             ->getRepository(Item::class)
             ->find($i_id);
+
+        $this->denyAccessUnlessGranted('edit', $item);
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($item);
         $em->flush();
