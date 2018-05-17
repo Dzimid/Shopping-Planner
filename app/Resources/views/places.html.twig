@@ -15,7 +15,7 @@
             {% endfor %}
         </div>
         <div class="col-sm-4">
-            <h4>Lista miejsc, do których nalerzysz</h4>
+            <h4>Lista miejsc, do których należysz</h4>
             {% for place in places %}
                 <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
             {% endfor %}

@@ -44,6 +44,8 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // TODO Przenieść tę logikę w inne miejsce
+
             $newPlace = new Place();
             $newPlace->setModerator($this->getUser());
             $newPlace->setName($form->getData()['name']);
@@ -68,8 +70,6 @@ class DefaultController extends Controller
 
         $usersInPlace = array();
 
-        $qq = $place->getUsers();
-
         foreach ($place->getUsers() as $usr) {
             $usersInPlace[] = array(
                 'name' => $usr->getUsername(),
@@ -92,6 +92,10 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // TODO Przenieść tę logike w inne miejsce
+
+            $this->denyAccessUnlessGranted('edit', $place);
+
             $em = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()
                 ->getRepository(User::class)
@@ -126,11 +130,13 @@ class DefaultController extends Controller
     {
         $user = $this->getDoctrine()
             ->getRepository(User::class)
-            ->findOneByUsername($u_id);
+            ->find($u_id);
 
         $place = $this->getDoctrine()
             ->getRepository(Place::class)
             ->find($p_id);
+
+        $this->denyAccessUnlessGranted('edit', $place);
 
         $user->removePlace($place);
         $em = $this->getDoctrine()->getManager();
