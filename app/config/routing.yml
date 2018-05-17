@@ -26,6 +26,11 @@ removeItemFromPlace:
     path: place/{p_id}/removeitem/{i_id}
     defaults: {_controller: AppBundle:Default:removeItemFromPlace}
 
+addPurchase:
+    path: purchase/add/{i_id}
+    defaults: {_controller: AppBundle:Default:addPurchase}
+
+
 #FOS
 
 fos_user_security:

@@ -98,26 +98,29 @@
                     </tr>
                     </thead>
                     <tbody>
-                        {% for item in itemsInPlace %}
+                    {% for item in itemsInPlace %}
 
-                            <tr>
+                        <tr>
 
-                                <td>{{ item.name }}</td>
+                            <td>{{ item.name }}</td>
 
-                                {% for user in usersInPlace %}
-                                    {% if user.id == app.user.id %}
-                                        <td>
-                                            <span class="glyphicon glyphicon-shopping-cart" style="color: green; font-size: 30px"></span>
-                                        </td>
-                                    {% else %}
-                                        <td>
-                                            data
-                                        </td>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
+                            {% for user in usersInPlace %}
+                                {% if user.id == app.user.id %}
+                                    <td>
+                                        <a href="{{ path('addPurchase', {'i_id': item.id}) }}">
+                                            <span class="glyphicon glyphicon-shopping-cart"
+                                                  style="color: green; font-size: 30px"></span>
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        data
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
 
-                        {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>

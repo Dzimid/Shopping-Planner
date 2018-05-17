@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -201,5 +202,24 @@ class DefaultController extends Controller
 
         $this->addFlash('addItemToPlaceOK', 'Usunięto przedmiot');
         return $this->redirectToRoute('place_page', array('id' => $p_id));
+    }
+
+    public function addPurchaseAction($i_id)
+    {
+        $item = $this->getDoctrine()
+            ->getRepository(Item::class)
+            ->find($i_id);
+
+        $purchase = new Purchase();
+        $purchase->setDate(new \DateTime());
+        $purchase->setUser($this->getUser());
+        $purchase->setItem($item);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($purchase);
+        $em->flush();
+
+        $this->addFlash('removeItemFromPlace', 'Dodano zakup');
+        return $this->redirectToRoute('place_page', array('id' => $item->getPlace()->getId()));
     }
 }

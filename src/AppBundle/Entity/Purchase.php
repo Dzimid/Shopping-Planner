@@ -30,13 +30,6 @@ class Purchase
     private $date;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $comment;
-
-    /**
      * @var Item
      *
      * Many Purchase one item
@@ -65,14 +58,6 @@ class Purchase
     }
 
     /**
-     * @return string
-     */
-    public function getComment()
-    {
-        return $this->comment;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getDate()
@@ -86,15 +71,6 @@ class Purchase
     public function getItem()
     {
         return $this->item;
-    }
-
-
-    /**
-     * @param string $comment
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
     }
 
     /**
@@ -111,5 +87,13 @@ class Purchase
     public function setItem($item)
     {
         $this->item = $item;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 }
