@@ -6,12 +6,10 @@ use AppBundle\Entity\Item;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
+use AppBundle\Form\AddItemToPlaceForm;
 use AppBundle\Form\AddUserToPlaceForm;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -93,8 +91,6 @@ class DefaultController extends Controller
             'moderator' => $place->getModerator(),
         );
 
-        $em = $this->getDoctrine()->getManager();
-
         /***USER FORM***/
 
         $userForm = $this->createForm(AddUserToPlaceForm::class);
@@ -109,26 +105,14 @@ class DefaultController extends Controller
 
         /***ITEM FORM***/
 
-        $itemForm = $this->createFormBuilder()
-            ->add('name', TextType::class, array('label' => 'Nazwa', 'required' => true))
-            ->add('add', SubmitType::class, array('label' => 'Dodaj', 'attr' => array('class' => 'btn btn-success')))
-            ->getForm();
-
+        $itemForm = $this->createForm(AddItemToPlaceForm::class);
         $itemForm->handleRequest($request);
 
         if ($itemForm->isSubmitted() && $itemForm->isValid()) {
-            $this->denyAccessUnlessGranted('edit', $place);
-
-            $itemFormData = $itemForm->getData();
-            $p = new Item();
-            $p->setName($itemFormData['name']);
-            $p->setPlace($place);
-
-            $em->persist($p);
-            $em->flush();
-
-            $this->addFlash('addItemToPlaceOK', 'Dodano przedmiot do tego miejca');
-            return $this->redirectToRoute('place_page', array('id' => $id));
+            return $this->forward('AppBundle:Moderator:addItemToPlace', array(
+                'place' => $place,
+                'formData' => $itemForm->getData()
+            ));
         }
 
         return $this->render('place.html.twig',
@@ -141,43 +125,6 @@ class DefaultController extends Controller
                 'purchasePerUser' => $purchasePerUser
             )
         );
-    }
-
-    public function removeUserFromPlaceAction($p_id, $u_id)
-    {
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->find($u_id);
-
-        $place = $this->getDoctrine()
-            ->getRepository(Place::class)
-            ->find($p_id);
-
-        $this->denyAccessUnlessGranted('edit', $place);
-
-        $user->removePlace($place);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($user);
-        $em->flush();
-
-        $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
-        return $this->redirectToRoute('place_page', array('id' => $p_id));
-    }
-
-    public function removeItemFromPlaceAction($p_id, $i_id)
-    {
-        $item = $this->getDoctrine()
-            ->getRepository(Item::class)
-            ->find($i_id);
-
-        $this->denyAccessUnlessGranted('edit', $item);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($item);
-        $em->flush();
-
-        $this->addFlash('addItemToPlaceOK', 'Usunięto przedmiot');
-        return $this->redirectToRoute('place_page', array('id' => $p_id));
     }
 
     public function addPurchaseAction($i_id)
