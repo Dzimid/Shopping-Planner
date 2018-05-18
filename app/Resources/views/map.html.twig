@@ -2,15 +2,44 @@
 
 {% block title %}
 
-Mapa
+Map
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <!--<script src = "src/AppBundle/Resources/js/map.js"></script> -->
+    <script src="{{ asset('bundles/app/js/map.js') }}"></script>
+
 
 {% endblock %}
 
 {% block body %}
 
-    <div class="row">
-        <div class="col-12">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6222.862338284064!2d14.486988799116736!3d53.446036184977274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47aa0ebe924fd495%3A0xcc43b7edfe1159b9!2zxbtvxYJuaWVyc2thIDQ5LCBTemN6ZWNpbg!5e0!3m2!1spl!2spl!4v1526036233894" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav">
+                <br>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active">
+                        <a href="#section1">Shop's list</a>
+                    </li>
+
+                </ul>
+                <br>
+                <div class="input-group">
+                    <input id="searchBar" type="text" class="form-control" placeholder="Search For..">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                         </button>
+                    </span>
+                </div>
+            </div>
+
+            <div id="map" class="col-sm-9">
+                <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19013.340007155082!2d14.495930994391646!3d53.43865313977846!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47aa093313465453%3A0x59ff236aee864f56!2sLidl!5e0!3m2!1sen!2spl!4v1520939125923" width="800" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>-->
+            </div>
         </div>
     </div>
 
