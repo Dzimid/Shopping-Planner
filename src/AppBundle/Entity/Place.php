@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -53,6 +54,11 @@ class Place
     private $items;
 
     /***********************************/
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     /**
      * @param string $name
@@ -121,9 +127,17 @@ class Place
     /**
      * @param mixed $users
      */
-    public function setUsers($users)
+    private function setUsers($users)
     {
         $this->users = $users;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addUser($user)
+    {
+        $this->users[] = $user;
     }
 
     /**
