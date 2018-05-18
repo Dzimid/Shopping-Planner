@@ -14,16 +14,32 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
+    /**
+     * Index Action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction()
     {
         return $this->render("index.html.twig");
     }
 
+    /**
+     * Map action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function mapAction()
     {
         return $this->render("map.html.twig");
     }
 
+    /**
+     * Places Action
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function placesAction(Request $request)         // TODO: Zabezpieczyć tę akcje
     {
         $user = $this->getDoctrine()
@@ -33,9 +49,12 @@ class DefaultController extends Controller
         $moderated = array();
         $places = array();
 
+        /** @var Place $place */
         foreach ($user->getModerated() as $place) {
             $moderated[] = array('name' => $place->getName(), 'id' => $place->getid());
         }
+
+        /** @var Place $place */
         foreach ($user->getPlaces() as $place) {
             $places[] = array('name' => $place->getName(), 'id' => $place->getId());
         }
@@ -54,6 +73,13 @@ class DefaultController extends Controller
         return $this->render('places.html.twig', array('moderated' => $moderated, 'places' => $places, 'form' => $form->createView()));
     }
 
+    /**
+     * Place action
+     *
+     * @param int $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function placeAction($id, Request $request)        // TODO: Zabezpieczyć tę akcje
     {
         $place = $this->getDoctrine()
@@ -68,18 +94,23 @@ class DefaultController extends Controller
         $itemsInPlace = array();
         $purchasePerUser = array(array());
 
+        /** @var User $usr */
         foreach ($place->getUsers() as $usr) {
             $usersInPlace[] = array(
                 'name' => $usr->getUsername(),
                 'id' => $usr->getId()
             );
         }
+
+        /** @var Item $itm */
         foreach ($place->getItems() as $itm) {
             $itemsInPlace[] = array(
                 'name' => $itm->getName(),
                 'id' => $itm->getId()
             );
         }
+
+        /** @var Purchase $p */
         foreach ($purchase as $p) {
             $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = $p->getDate()->format('Y-m-d H:i:s');
         }
@@ -127,11 +158,18 @@ class DefaultController extends Controller
         );
     }
 
-    public function addPurchaseAction($i_id)
+    /**
+     * Add Purchase action
+     *
+     * @param int $itemId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addPurchaseAction($itemId)
     {
+        /** @var Item $item */
         $item = $this->getDoctrine()
             ->getRepository(Item::class)
-            ->find($i_id);
+            ->find($itemId);
 
         $purchase = new Purchase();
         $purchase->setDate(new \DateTime());

@@ -77,11 +77,12 @@ class User extends BaseUser
     }
 
     /**
-     * @param mixed $places
+     * @param Place $place
      */
-    public function setPlaces($places)
+    public function addPlace($place)
     {
-        $this->places = $places;
+        $place->addUser($this);
+        $this->places[] = $place;
     }
 
     /**
@@ -93,6 +94,14 @@ class User extends BaseUser
     public function removePlace($place)
     {
         return $this->places->removeElement($place);
+    }
+
+    /**
+     * @param mixed $places
+     */
+    private function setPlaces($places)
+    {
+        $this->places = $places;
     }
 
     /**
