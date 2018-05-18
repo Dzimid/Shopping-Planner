@@ -19,17 +19,17 @@ place_page:
     defaults: {_controller: AppBundle:Default:place}
 
 addPurchase:
-    path: purchase/add/{i_id}
+    path: purchase/add/{itemId}
     defaults: {_controller: AppBundle:Default:addPurchase}
 
 #MODERATOR
 
 removeUserFromPlace:
-    path: place/{p_id}/removeuser/{u_id}
+    path: place/{placeId}/removeuser/{userId}
     defaults: {_controller: AppBundle:Moderator:removeUserFromPlace}
 
 removeItemFromPlace:
-    path: place/{p_id}/removeitem/{i_id}
+    path: place/{placeId}/removeitem/{itemId}
     defaults: {_controller: AppBundle:Moderator:removeItemFromPlace}
 
 

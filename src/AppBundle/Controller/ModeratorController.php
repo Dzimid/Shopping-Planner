@@ -9,6 +9,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ModeratorController extends Controller
 {
+    /**
+     * Create Place Action
+     *
+     * @param array $formData (name, description)
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function createPlaceAction($formData)
     {
         $newPlace = new Place();
@@ -24,21 +30,29 @@ class ModeratorController extends Controller
         return $this->redirectToRoute('places_page');
     }
 
+    /**
+     * Add User to Place Action
+     *
+     * @param Place $place
+     * @param array $formData (user_name)
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function addUserToPlaceAction($place, $formData)
     {
         $this->denyAccessUnlessGranted('edit', $place);
 
+        /** @var User $user */
         $user = $this->getDoctrine()
             ->getRepository(User::class)
-            ->findOneByUsername($formData['user_name']);
+            ->findOneBy(array('username' => $formData['user_name']));
 
         if (empty($user)) {
             $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
         } else if ($user->getId() == $this->getUser()->getId()) {
             $this->addFlash('addUserToPlaceERROR', 'Nie możesz dodać siebie do tej grupy');
         } else {
-            $place->setUsers(array($user));
-            $user->setPlaces(array($place));
+            $user->addPlace($place);
+            $place->addUser($user);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($place);
@@ -51,6 +65,13 @@ class ModeratorController extends Controller
         return $this->redirectToRoute('place_page', array('id' => $place->getId()));
     }
 
+    /**
+     * Add Item to Place Action
+     *
+     * @param Place $place
+     * @param array $formData (name)
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function addItemToPlaceAction($place, $formData)
     {
         $this->denyAccessUnlessGranted('edit', $place);
@@ -67,32 +88,48 @@ class ModeratorController extends Controller
         return $this->redirectToRoute('place_page', array('id' => $place->getId()));
     }
 
-    public function removeUserFromPlaceAction($p_id, $u_id)
+    /**
+     * Remove User from Place Action
+     *
+     * @param int $placeId
+     * @param int $userId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removeUserFromPlaceAction($placeId, $userId)
     {
         $place = $this->getDoctrine()
             ->getRepository(Place::class)
-            ->find($p_id);
+            ->find($placeId);
 
         $this->denyAccessUnlessGranted('edit', $place);
 
         $user = $this->getDoctrine()
             ->getRepository(User::class)
-            ->find($u_id);
+            ->find($userId);
 
         $user->removePlace($place);
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
 
+        // TODO Usuwanie wszystkich przedmiotów kupionych przez usuwanego użytkownika w danym miejscu
+
         $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
-        return $this->redirectToRoute('place_page', array('id' => $p_id));
+        return $this->redirectToRoute('place_page', array('id' => $placeId));
     }
 
-    public function removeItemFromPlaceAction($p_id, $i_id)
+    /**
+     * Remove Item from Place Action
+     *
+     * @param int $placeId
+     * @param int $itemId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removeItemFromPlaceAction($placeId, $itemId)
     {
         $item = $this->getDoctrine()
             ->getRepository(Item::class)
-            ->find($i_id);
+            ->find($itemId);
 
         $this->denyAccessUnlessGranted('edit', $item);
 
@@ -101,6 +138,6 @@ class ModeratorController extends Controller
         $em->flush();
 
         $this->addFlash('addItemToPlaceOK', 'Usunięto przedmiot');
-        return $this->redirectToRoute('place_page', array('id' => $p_id));
+        return $this->redirectToRoute('place_page', array('id' => $placeId));
     }
 }

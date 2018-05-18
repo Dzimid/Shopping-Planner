@@ -39,7 +39,7 @@
 
             {% for user in usersInPlace %}
                 {{ user.name }}
-                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user.id}) }}"
+                <a href="{{ path('removeUserFromPlace', {'placeId': placeInfo.id, 'userId': user.id}) }}"
                    style="color: red;">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
@@ -71,7 +71,7 @@
 
             {% for item in itemsInPlace %}
                 {{ item.name }}
-                <a href="{{ path('removeItemFromPlace', {'i_id': item.id, 'p_id': placeInfo.id}) }}"
+                <a href="{{ path('removeItemFromPlace', {'itemId': item.id, 'placeId': placeInfo.id}) }}"
                    style="color: red;">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
@@ -112,7 +112,7 @@
                             {% for user in usersInPlace %}
                                 <td>
                                     {% if user.id == app.user.id %}
-                                        <a href="{{ path('addPurchase', {'i_id': item.id}) }}">
+                                        <a href="{{ path('addPurchase', {'itemId': item.id}) }}">
                                             <span class="glyphicon glyphicon-shopping-cart"
                                                   style="color: green; font-size: 30px"></span>
                                         </a>
