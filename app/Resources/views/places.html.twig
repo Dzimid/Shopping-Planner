@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Twoje miejsca
+
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-4">
+            <h4>Lista miejsc, które moderujesz:</h4>
+            {% for place in moderated %}
+                <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
+            {% endfor %}
+        </div>
+        <div class="col-sm-4">
+            <h4>Lista miejsc, do których należysz</h4>
+            {% for place in places %}
+                <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
+            {% endfor %}
+        </div>
+        <div class="col-sm-4">
+            {% for msg in app.session.flashBag.get('newPlace') %}
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+            <h3>Dodaj miejsce</h3>
+            {{ form_start(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.description) }}
+                {{ form_row(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+

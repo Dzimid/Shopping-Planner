@@ -10,6 +10,29 @@ map_page:
     path: map/
     defaults: {_controller: AppBundle:Default:map}
 
+places_page:
+    path: places/
+    defaults: {_controller: AppBundle:Default:places}
+
+place_page:
+    path: place/{id}
+    defaults: {_controller: AppBundle:Default:place}
+
+removeUserFromPlace:
+    path: place/{p_id}/removeuser/{u_id}
+    defaults: {_controller: AppBundle:Default:removeUserFromPlace}
+
+removeItemFromPlace:
+    path: place/{p_id}/removeitem/{i_id}
+    defaults: {_controller: AppBundle:Default:removeItemFromPlace}
+
+addPurchase:
+    path: purchase/add/{i_id}
+    defaults: {_controller: AppBundle:Default:addPurchase}
+
+
+#FOS
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

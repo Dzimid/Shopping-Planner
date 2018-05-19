@@ -1,20 +1,96 @@
-{% extends 'base.html.twig' %}
-
 {% block title %}
 
-Map
+
+{% endblock %}
+
+{% block head %}
+    <style>
+        /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+        /* API KEY: AIzaSyDOPK54c9GmS45KXfWZQJ-vQizsdvFNQ10 */
+        .row.content {
+            height: 700px
+        }
+
+        /* Set gray background color and 100% height */
+
+        .sidenav {
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {
+                height: auto;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block stylesheets %}
+
+    <link href="{{ asset('bundles/app/css/style.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 {% endblock %}
 
 {% block javascripts %}
 
     <!--<script src = "src/AppBundle/Resources/js/map.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="{{ asset('bundles/app/js/map.js') }}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOPK54c9GmS45KXfWZQJ-vQizsdvFNQ10&libraries=places&callback=initMap" async defer></script>
 
 
 {% endblock %}
 
 {% block body %}
+
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ path('home_page') }}">Logo</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">Your Group</a>
+                    </li>
+                    <li>
+                        <a href="groupMessages.html">Messages</a>
+                    </li>
+                    <li class="active">
+                        <a href="#">Map</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-user"></span> My Account</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <div class="container-fluid">
         <div class="row content">
@@ -22,7 +98,7 @@ Map
                 <br>
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active">
-                        <a href="#section1">Shop's list</a>
+                        Shop's list
                     </li>
 
                 </ul>
@@ -43,9 +119,13 @@ Map
         </div>
     </div>
 
+
+    {#<div class="row">#}
+        {#<div class="col-sm-12">#}
+            {#<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6222.862338284064!2d14.486988799116736!3d53.446036184977274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47aa0ebe924fd495%3A0xcc43b7edfe1159b9!2zxbtvxYJuaWVyc2thIDQ5LCBTemN6ZWNpbg!5e0!3m2!1spl!2spl!4v1526036233894" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>#}
+        {#</div>#}
+    {#</div>#}
+
 {% endblock %}
 
-{% block stylesheets %}
-
-{% endblock %}
 

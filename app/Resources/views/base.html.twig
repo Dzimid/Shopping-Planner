@@ -5,10 +5,13 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap.min.css') }}">
+    <link href="{{ asset('bundles/app/css/style.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="{{ asset('bundles/app/js/jquery-3.3.1.min.js') }}"></script>
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>#}
     <script src="{{ asset('bundles/app/js/bootstrap.min.js') }}"></script>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+
     <style>
         /* jssor slider loading skin spin css */
         .jssorl-009-spin img {
@@ -27,8 +30,40 @@
                 transform: rotate(360deg);
             }
         }
+
+        .row.content {
+            height: 700px
+        }
+
+        /* Set gray background color and 100% height */
+
+        .sidenav {
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {
+                height: auto;
+            }
+        }
     </style>
     {% block stylesheets %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     {% endblock %}
 </head>
 <body>
@@ -154,22 +189,41 @@
     </div>
 
     {#MENU#}
-    <div class="row main-menu" style="background-color: yellow; padding: 5px;">
-        <div class="col-12">
-            <a href="{{ path('home_page') }}">Home</a>
-            <a href="{{ path('map_page') }}">Mapa</a>
-        </div>
-    </div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ path('home_page') }}">Home</a></li>
+                    <li><a href="{{ path('map_page') }}">Mapa</a></li>
+                    <li><a href="{{ path('map_page') }}">Mapa</a></li>
+                    <li><a href="{{ path('places_page') }}">Miejsca</a></li>
+                </ul>
 
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> My Account |</a></li>
+                    <div>
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <a href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                            </a>
+                            <span class="glyphicon glyphicon-log-out"></span>
+                        {% else %}
+                            <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                            <span class="glyphicon glyphicon-log-in"></span>
+                            <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>
+                        {% endif %}
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
     {#BODY#}
     {% block body %}{% endblock %}
 
     {#FOOTER#}
-    <div class="row">
-        <div class="col-12" style="background-color: #1c7430; height: 150px;">
-            Stopka
-        </div>
-    </div>
+    <footer class="container-fluid text-center">
+        <p>Footer Text</p>
+    </footer>
 
     {#JAVASCRIPTS#}
     {% block javascripts %}

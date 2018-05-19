@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Miejsce {{ placeInfo.name }}
+
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-8">
+            <h1>
+                Miejsce o nazwie {{ placeInfo.name }}
+            </h1>
+            <br>
+            <div>Opis miejsca: {{ placeInfo.description }}</div>
+            <div>Moderator: {{ placeInfo.moderator }}</div>
+            <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+        </div>
+
+        <div class="col-sm-4" style="background-color: #b9bbbe">
+            {#ALERTS#}
+
+            {% for msg in app.session.flashBag.get('addUserToPlaceOK') %}
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            {% for msg in app.session.flashBag.get('addUserToPlaceERROR') %}
+                <div class="alert alert-danger alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            <h4>Użytkownicy:</h4>
+
+            {% for user in usersInPlace %}
+                {{ user.name }}
+                <a href="{{ path('removeUserFromPlace', {'p_id': placeInfo.id, 'u_id': user.id}) }}"
+                   style="color: red;">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                <br>
+            {% endfor %}
+
+            <hr>
+            {{ form(userForm) }}
+
+            <hr>
+
+            {#ALERTS#}
+
+            {% for msg in app.session.flashBag.get('addItemToPlaceOK') %}
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            {% for msg in app.session.flashBag.get('addItemToPlaceERROR') %}
+                <div class="alert alert-danger alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+
+            <h4>Przedmioty:</h4>
+
+            {% for item in itemsInPlace %}
+                {{ item.name }}
+                <a href="{{ path('removeItemFromPlace', {'i_id': item.id, 'p_id': placeInfo.id}) }}"
+                   style="color: red;">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                <br>
+            {% endfor %}
+
+            {{ form(itemForm) }}
+        </div>
+        <div class="col-sm-12">
+            {#ALERTS#}
+
+            {% for msg in app.session.flashBag.get('addPurchase') %}
+                <div class="alert alert-success alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ msg }}</strong>
+                </div>
+            {% endfor %}
+            <h2>Siatka</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead style="font-weight: bold">
+                    <tr>
+                        <td style="background-image: linear-gradient(to bottom left,  transparent calc(50% - 1px), #DDDDDD, transparent calc(50% + 1px))">
+                            <div style="text-align: right">Użytkownicy</div>
+                            Przedmioty
+                        </td>
+                        {% for user in usersInPlace %}
+
+                            <td>{{ user.name }}</td>
+
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in itemsInPlace %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            {% for user in usersInPlace %}
+                                <td>
+                                    {% if user.id == app.user.id %}
+                                        <a href="{{ path('addPurchase', {'i_id': item.id}) }}">
+                                            <span class="glyphicon glyphicon-shopping-cart"
+                                                  style="color: green; font-size: 30px"></span>
+                                        </a>
+                                    {% endif %}
+                                    {% if purchasePerUser[user.id][item.id] is defined %}
+                                        {% for d in purchasePerUser[user.id][item.id] %}
+                                            <div class="purchase-date">
+                                                {{ d }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
