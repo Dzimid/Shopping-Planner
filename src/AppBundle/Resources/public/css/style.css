@@ -35,5 +35,19 @@
     height: 100%;
   }
 
+#slider_container{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 1240px;
+    height: 442px;
+    overflow: hidden;
+}
+
+.slider_pictures{
+    background-repeat: no-repeat;
+    background-size: 300px 100px;
+}
+
 
 
