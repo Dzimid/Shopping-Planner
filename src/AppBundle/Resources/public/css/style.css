@@ -12,16 +12,16 @@
 }
 
 .title{
-    background-image: url(vegetables.jpg);
     /*background-position-y: 27%;
     background-position-x: 50%;*/
-    color: black;
+    color: white;
 }
 
 .font1{
-    font-size: 60px;
-    /*text-shadow: -1px 0 white, 0 2px white, 0px 0 white, 0 -1px white;*/
-    font-weight: bold;
+    font-size: 70px;
+    text-shadow: 0px 0 white, 0 1px white, 0px 0 white, 0 -1px white;
+    /*font-weight: bold;*/
+    color: black;
 }
 
 .font2{
@@ -41,12 +41,11 @@
     top: 0px;
     width: 1240px;
     height: 442px;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .slider_pictures{
-    background-repeat: no-repeat;
-    background-size: 300px 100px;
+    /*transform: scale(0.5,0.5);*/
 }
 
 .col-sm-4{
@@ -55,6 +54,18 @@
 
 #foot{
     height: 40px;
+}
+
+.img{
+    /*transform: scale(2,2);*/
+}
+
+.subpages_picture{
+    height: 150px;
+    width: 1140px;
+    background-image: url("../img/subpagesPicture.jpg");
+    background-position-y: 40%;
+    background-position-x: 50%;
 }
 
 
