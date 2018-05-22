@@ -14,15 +14,23 @@
     <div class="row">
         <div class="col-sm-4 places">
             <h4>Lista miejsc, które moderujesz:</h4>
-            {% for place in moderated %}
-                <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
-            {% endfor %}
+            <div class="placesContainer well">
+                {% for place in moderated %}
+                    <div class="placesContainer well">
+                        <a class="placesLinkStyle" href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="col-sm-4 places">
-            <h4>Lista miejsc, do których należysz</h4>
-            {% for place in places %}
-                <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
-            {% endfor %}
+            <h4>Lista miejsc, do których należysz:</h4>
+            <div class="placesContainer well">
+                {% for place in places %}
+                    <div class="placesContainer well">
+                        <a class="placesLinkStyle" href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="col-sm-4">
             {% for msg in app.session.flashBag.get('newPlace') %}
