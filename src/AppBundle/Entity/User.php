@@ -40,6 +40,14 @@ class User extends BaseUser
      */
     private $boughtItems;
 
+    /**
+     * @var Message[]
+     *
+     * One user Many Messages
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Message", mappedBy="user")
+     */
+    private $messages;
+
     /*************************************/
 
     /**
