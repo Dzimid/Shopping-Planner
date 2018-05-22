@@ -22,15 +22,18 @@
                 <p><a href="#">Link</a></p>
             </div>
             <div class="col-sm-7">
-
+                {% for msg in app.session.flashBag.get('addMessage') %}
+                    <div class="alert alert-success alert-dismissible fade in">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>{{ msg }}</strong>
+                    </div>
+                {% endfor %}
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="panel panel-default text-left">
-                            <div class="panel-body">
-                                <p contenteditable="true">Status</p>
-
-                            </div>
-                        </div>
+                        {{ form_start(form) }}
+                            {{ form_row(form.message) }}
+                            {{ form_row(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+                        {{ form_end(form) }}
                     </div>
                 </div>
 

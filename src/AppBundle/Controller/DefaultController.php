@@ -3,14 +3,17 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
+use AppBundle\Entity\Message;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
 use AppBundle\Form\AddItemToPlaceForm;
+use AppBundle\Form\AddMessageForm;
 use AppBundle\Form\AddUserToPlaceForm;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Date;
 
 class DefaultController extends Controller
 {
@@ -189,8 +192,31 @@ class DefaultController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function messagesAction()
+    public function messagesAction($id, Request $request)
     {
-        return $this->render('messages.html.twig');
+        $place = $this->getDoctrine()
+            ->getRepository(Place::class)
+            ->find($id);
+
+        $form = $this->createForm(AddMessageForm::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // TODO Przenieśc tę logike do nowej akcji
+            $msg = new Message();
+            $msg->setContent($form->getData()['message']);
+            $msg->setDate(new \DateTime());
+            $msg->setUser($this->getUser());
+            $msg->setPlace($place);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($msg);
+            $em->flush();
+
+            $this->addFlash('addMessage', 'Dodano wiadomość');
+            return $this->redirectToRoute('messages_page', array('id' => $id));
+        }
+
+        return $this->render('messages.html.twig', array('form' => $form->createView()));
     }
 }

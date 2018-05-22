@@ -19,7 +19,7 @@ place_page:
     defaults: {_controller: AppBundle:Default:place}
 
 messages_page:
-    path: /messages
+    path: /place/{id}/messages
     defaults: {_controller: AppBundle:Default:messages}
 
 addPurchase:
