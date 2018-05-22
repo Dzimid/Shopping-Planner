@@ -68,5 +68,12 @@
     background-position-x: 50%;
 }
 
+.places{
+    border-right: 2px solid black;
+    height: 300px;
+    width: 200px;
+    text-align: center;
+}
+
 
 

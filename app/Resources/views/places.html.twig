@@ -12,13 +12,13 @@
 
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4 places">
             <h4>Lista miejsc, które moderujesz:</h4>
             {% for place in moderated %}
                 <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
             {% endfor %}
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 places">
             <h4>Lista miejsc, do których należysz</h4>
             {% for place in places %}
                 <a href="{{ path('place_page', {'id': place.id}) }}">{{ place.name }}</a><br>
@@ -31,7 +31,7 @@
                     <strong>{{ msg }}</strong>
                 </div>
             {% endfor %}
-            <h3>Dodaj miejsce</h3>
+            <h3 style="text-align: center">Dodaj miejsce</h3>
             {{ form_start(form) }}
                 {{ form_row(form.name) }}
                 {{ form_row(form.description) }}
