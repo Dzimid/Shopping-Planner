@@ -13,7 +13,6 @@ use AppBundle\Form\AddUserToPlaceForm;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Date;
 
 class DefaultController extends Controller
 {
@@ -230,7 +229,7 @@ class DefaultController extends Controller
 
         return $this->render('messages.html.twig', array(
             'form' => $form->createView(),
-            'messages' => $messages
+            'messages' => array_reverse($messages)
         ));
     }
 }
