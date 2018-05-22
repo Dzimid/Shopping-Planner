@@ -7,7 +7,8 @@
             <div class="col-sm-3 well">
                 <div class="well">
                     <p><a href="#">My Profile</a></p>
-                    <img src={{ asset('bundles/app/img/profilePics/man.PNG') }} class="img-circle" height="65" width="65" alt="Avatar">
+                    <img src={{ asset('bundles/app/img/profilePics/man.PNG') }} class="img-circle" height="65"
+                         width="65" alt="Avatar">
                 </div>
                 <div class="well">
 
@@ -31,77 +32,30 @@
                 <div class="row">
                     <div class="col-sm-12">
                         {{ form_start(form) }}
-                            {{ form_row(form.message) }}
-                            {{ form_row(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+                        {{ form_row(form.message) }}
+                        {{ form_row(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
                         {{ form_end(form) }}
                     </div>
                 </div>
 
+                {% for msg in messages %}
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="well">
-                            <p>John</p>
-                            <img src={{ asset('bundles/app/img/profilePics/black.PNG') }} class="img-circle" height="55" width="55" alt="Avatar">
+                            <p>{{ msg.author }}</p>
+                            <img src={{ asset('bundles/app/img/profilePics/black.PNG') }} class="img-circle"
+                                 height="55"
+                                 width="55" alt="Avatar">
+                            <p>{{ msg.date }}</p>
                         </div>
                     </div>
                     <div class="col-sm-9">
                         <div class="well">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <p>{{ msg.content }}</p>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="well">
-                            <p>Bo</p>
-                            <img src={{ asset('bundles/app/img/profilePics/yellow.PNG') }} class="img-circle" height="55" width="55" alt="Avatar">
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
-                        <div class="well">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="well">
-                            <p>Jane</p>
-                            <img src={{ asset('bundles/app/img/profilePics/user.PNG') }} class="img-circle" height="55" width="55" alt="Avatar">
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
-                        <div class="well">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="well">
-                            <p>Anja</p>
-                            <img src={{ asset('bundles/app/img/profilePics/doc.PNG') }} class="img-circle" height="55" width="55" alt="Avatar">
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
-                        <div class="well">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="well">
-                            <p>Michal</p>
-                            <img src={{ asset('bundles/app/img/profilePics/blank.PNG') }} class="img-circle" height="55" width="55" alt="Avatar">
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
-                        <div class="well">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
             <div class="col-sm-2 well map">
                 <div class="thumbnail">

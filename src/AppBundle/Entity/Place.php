@@ -163,4 +163,12 @@ class Place
     {
         $this->items = $items;
     }
+
+    /**
+     * @return Message[]
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 }

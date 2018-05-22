@@ -198,6 +198,17 @@ class DefaultController extends Controller
             ->getRepository(Place::class)
             ->find($id);
 
+        $messages = array();
+
+        /** @var Message $message */
+        foreach ($place->getMessages() as $message) {
+            $messages[] = array(
+                'content' => $message->getContent(),
+                'author' => $message->getUser()->getUsername(),
+                'date' => $message->getDate()->format("Y-m-d H:i:s")
+            );
+        }
+
         $form = $this->createForm(AddMessageForm::class);
         $form->handleRequest($request);
 
@@ -217,6 +228,9 @@ class DefaultController extends Controller
             return $this->redirectToRoute('messages_page', array('id' => $id));
         }
 
-        return $this->render('messages.html.twig', array('form' => $form->createView()));
+        return $this->render('messages.html.twig', array(
+            'form' => $form->createView(),
+            'messages' => $messages
+        ));
     }
 }
