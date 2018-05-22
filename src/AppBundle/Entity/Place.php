@@ -53,6 +53,14 @@ class Place
      */
     private $items;
 
+    /**
+     * @var Message[]
+     *
+     * One place many Messages
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Message", mappedBy="place")
+     */
+    private $messages;
+
     /***********************************/
 
     public function __construct()
@@ -154,5 +162,13 @@ class Place
     public function setItems($items)
     {
         $this->items = $items;
+    }
+
+    /**
+     * @return Message[]
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }

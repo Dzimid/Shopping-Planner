@@ -9,6 +9,7 @@
 {% block body %}
     <div class="row">
         <div class="col-sm-8">
+            <a href="{{ path('messages_page', {'id': placeInfo.id}) }}">Wiadomości</a>
             <h1>
                 Miejsce o nazwie {{ placeInfo.name }}
             </h1>

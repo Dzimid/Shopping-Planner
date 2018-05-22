@@ -3,10 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
+use AppBundle\Entity\Message;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
 use AppBundle\Form\AddItemToPlaceForm;
+use AppBundle\Form\AddMessageForm;
 use AppBundle\Form\AddUserToPlaceForm;
 use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -182,5 +184,52 @@ class DefaultController extends Controller
 
         $this->addFlash('addPurchase', 'Dodano zakup');
         return $this->redirectToRoute('place_page', array('id' => $item->getPlace()->getId()));
+    }
+
+    /**
+     * Messages Action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function messagesAction($id, Request $request)
+    {
+        $place = $this->getDoctrine()
+            ->getRepository(Place::class)
+            ->find($id);
+
+        $messages = array();
+
+        /** @var Message $message */
+        foreach ($place->getMessages() as $message) {
+            $messages[] = array(
+                'content' => $message->getContent(),
+                'author' => $message->getUser()->getUsername(),
+                'date' => $message->getDate()->format("Y-m-d H:i:s")
+            );
+        }
+
+        $form = $this->createForm(AddMessageForm::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // TODO Przenieśc tę logike do nowej akcji
+            $msg = new Message();
+            $msg->setContent($form->getData()['message']);
+            $msg->setDate(new \DateTime());
+            $msg->setUser($this->getUser());
+            $msg->setPlace($place);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($msg);
+            $em->flush();
+
+            $this->addFlash('addMessage', 'Dodano wiadomość');
+            return $this->redirectToRoute('messages_page', array('id' => $id));
+        }
+
+        return $this->render('messages.html.twig', array(
+            'form' => $form->createView(),
+            'messages' => array_reverse($messages)
+        ));
     }
 }
