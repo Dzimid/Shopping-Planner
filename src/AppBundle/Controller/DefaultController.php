@@ -183,4 +183,14 @@ class DefaultController extends Controller
         $this->addFlash('addPurchase', 'Dodano zakup');
         return $this->redirectToRoute('place_page', array('id' => $item->getPlace()->getId()));
     }
+
+    /**
+     * Messages Action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function messagesAction()
+    {
+        return $this->render('messages.html.twig');
+    }
 }
