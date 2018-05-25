@@ -9,14 +9,17 @@
 {% block body %}
     <div class="row">
         <div class="col-sm-8">
-            <a href="{{ path('messages_page', {'id': placeInfo.id}) }}">Wiadomości</a>
-            <h1>
+            <h1 style="text-align: center; border-bottom:  2px solid black">
                 Miejsce o nazwie {{ placeInfo.name }}
             </h1>
+            <a class="button" style="float: right; margin: 3% 3% 0% 0%" href="{{ path('messages_page', {'id': placeInfo.id}) }}">Messages</a>
+
             <br>
-            <div>Opis miejsca: {{ placeInfo.description }}</div>
-            <div>Moderator: {{ placeInfo.moderator }}</div>
-            <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+            <div class="groupInfo">
+                <div>Opis miejsca: {{ placeInfo.description }}</div>
+                <div>Moderator: {{ placeInfo.moderator }}</div>
+                <a style="font-weight: bolder" class="placesLinkStyle" href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+            </div>
         </div>
 
         <div class="col-sm-4" style="background-color: #b9bbbe">
