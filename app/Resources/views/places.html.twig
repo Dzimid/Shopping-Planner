@@ -33,12 +33,6 @@
             </div>
         </div>
         <div class="col-sm-4">
-            {% for msg in app.session.flashBag.get('newPlace') %}
-                <div class="alert alert-success alert-dismissible fade in">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>{{ msg }}</strong>
-                </div>
-            {% endfor %}
             <h3 style="text-align: center">Dodaj miejsce</h3>
             {{ form_start(form) }}
                 {{ form_row(form.name) }}

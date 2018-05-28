@@ -81,6 +81,7 @@
         {% block slider %}
         {% endblock %}
 
+
         {#MENU#}
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
@@ -114,6 +115,34 @@
                 </div>
             </div>
         </nav>
+
+
+        {% block alerts %}
+
+            {% for type, flash_messages in app.session.flashBag.all %}
+                {% for flash_message in flash_messages %}
+                    {% if 'success' in type  %}
+                        <div class="alert alert-success alert-dismissible fade in">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>{{ flash_message }}</strong>
+                        </div>
+                    {% elseif 'danger' in type %}
+                        <div class="alert alert-danger alert-dismissible fade in">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>{{ flash_message }}</strong>
+                        </div>
+                    {% elseif 'info' in type %}
+                        <div class="alert alert-info alert-dismissible fade in">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>{{ flash_message }}</strong>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+
+        {% endblock %}
+
+
         {#BODY#}
         {% block body %}{% endblock %}
 
