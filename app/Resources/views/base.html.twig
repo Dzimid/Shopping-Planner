@@ -121,22 +121,12 @@
 
             {% for type, flash_messages in app.session.flashBag.all %}
                 {% for flash_message in flash_messages %}
-                    {% if 'success' in type  %}
-                        <div class="alert alert-success alert-dismissible fade in">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>{{ flash_message }}</strong>
-                        </div>
-                    {% elseif 'danger' in type %}
-                        <div class="alert alert-danger alert-dismissible fade in">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>{{ flash_message }}</strong>
-                        </div>
-                    {% elseif 'info' in type %}
-                        <div class="alert alert-info alert-dismissible fade in">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>{{ flash_message }}</strong>
-                        </div>
-                    {% endif %}
+
+                    <div class="alert alert-{{ type }} alert-dismissible fade in">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>{{ flash_message }}</strong>
+                    </div>
+
                 {% endfor %}
             {% endfor %}
 
