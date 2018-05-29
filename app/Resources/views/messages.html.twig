@@ -2,6 +2,8 @@
 
 {% block body %}
 
+
+    <a style="font-weight: bolder" class="placesLinkStyle" href="{{ path('place_page', {'id': app.request.attributes.get('id')}) }}">Powrót do miejsca</a>
     <div class="container text-center">
         <div class="row">
             <div class="col-sm-3 well">
@@ -23,12 +25,6 @@
                 <p><a href="#">Link</a></p>
             </div>
             <div class="col-sm-7">
-                {% for msg in app.session.flashBag.get('addMessage') %}
-                    <div class="alert alert-success alert-dismissible fade in">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>{{ msg }}</strong>
-                    </div>
-                {% endfor %}
                 <div class="row">
                     <div class="col-sm-12">
                         {{ form_start(form) }}

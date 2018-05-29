@@ -71,6 +71,7 @@
 .places{
     border-right: 2px solid black;
     text-align: center;
+    min-height: 100%;
 }
 
 .placesLinkStyle{
@@ -95,6 +96,57 @@
 .placesLinkStyle:active{
     text-decoration: none;
 }
+
+.button {
+    display: inline-block;
+    border: none;
+    padding: 1rem 2rem;
+    margin: 0;
+    text-decoration: none;
+    background: #101010;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out,
+    transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    font-size: 20px;
+}
+
+.button:hover{
+    background: #555555;
+    text-decoration: none;
+    color: white;
+}
+
+.button:focus {
+    background: #555555;
+}
+
+.button:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+}
+
+.button:active {
+    transform: scale(0.99);
+    color: white;
+}
+
+
+
+/*Group Info*/
+.groupInfo{
+    background-color: #b9bbbe;
+    width: 30%;
+    text-align: center;
+    font-size: 20px;
+    color: black;
+}
+/*Group Info*/
 
 
 

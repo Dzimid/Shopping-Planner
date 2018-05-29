@@ -9,32 +9,20 @@
 {% block body %}
     <div class="row">
         <div class="col-sm-8">
-            <a href="{{ path('messages_page', {'id': placeInfo.id}) }}">Wiadomości</a>
-            <h1>
+            <h1 style="text-align: center; border-bottom:  2px solid black">
                 Miejsce o nazwie {{ placeInfo.name }}
             </h1>
+            <a class="button" style="float: right; margin: 3% 3% 0% 0%" href="{{ path('messages_page', {'id': placeInfo.id}) }}">Messages</a>
+
             <br>
-            <div>Opis miejsca: {{ placeInfo.description }}</div>
-            <div>Moderator: {{ placeInfo.moderator }}</div>
-            <a href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+            <div class="groupInfo">
+                <div>Opis miejsca: {{ placeInfo.description }}</div>
+                <div>Moderator: {{ placeInfo.moderator }}</div>
+                <a style="font-weight: bolder" class="placesLinkStyle" href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+            </div>
         </div>
 
         <div class="col-sm-4" style="background-color: #b9bbbe">
-            {#ALERTS#}
-
-            {% for msg in app.session.flashBag.get('addUserToPlaceOK') %}
-                <div class="alert alert-success alert-dismissible fade in">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>{{ msg }}</strong>
-                </div>
-            {% endfor %}
-
-            {% for msg in app.session.flashBag.get('addUserToPlaceERROR') %}
-                <div class="alert alert-danger alert-dismissible fade in">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>{{ msg }}</strong>
-                </div>
-            {% endfor %}
 
             <h4>Użytkownicy:</h4>
 
@@ -49,24 +37,7 @@
 
             <hr>
             {{ form(userForm) }}
-
             <hr>
-
-            {#ALERTS#}
-
-            {% for msg in app.session.flashBag.get('addItemToPlaceOK') %}
-                <div class="alert alert-success alert-dismissible fade in">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>{{ msg }}</strong>
-                </div>
-            {% endfor %}
-
-            {% for msg in app.session.flashBag.get('addItemToPlaceERROR') %}
-                <div class="alert alert-danger alert-dismissible fade in">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>{{ msg }}</strong>
-                </div>
-            {% endfor %}
 
             <h4>Przedmioty:</h4>
 
@@ -82,14 +53,6 @@
             {{ form(itemForm) }}
         </div>
         <div class="col-sm-12">
-            {#ALERTS#}
-
-            {% for msg in app.session.flashBag.get('addPurchase') %}
-                <div class="alert alert-success alert-dismissible fade in">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>{{ msg }}</strong>
-                </div>
-            {% endfor %}
             <h2>Siatka</h2>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover">

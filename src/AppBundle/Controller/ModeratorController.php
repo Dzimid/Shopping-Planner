@@ -26,7 +26,7 @@ class ModeratorController extends Controller
         $em->persist($newPlace);
         $em->flush();
 
-        $this->addFlash('newPlace', 'Dodano nowe miejsce');
+        $this->addFlash('success', 'Dodano nowe miejsce');
         return $this->redirectToRoute('places_page');
     }
 
@@ -47,9 +47,9 @@ class ModeratorController extends Controller
             ->findOneBy(array('username' => $formData['user_name']));
 
         if (empty($user)) {
-            $this->addFlash('addUserToPlaceERROR', 'Niepoprawny użytkownik');
+            $this->addFlash('danger', 'Niepoprawny użytkownik');
         } else if ($user->getId() == $this->getUser()->getId()) {
-            $this->addFlash('addUserToPlaceERROR', 'Nie możesz dodać siebie do tej grupy');
+            $this->addFlash('danger', 'Nie możesz dodać siebie do tej grupy');
         } else {
             $user->addPlace($place);
             $place->addUser($user);
@@ -59,7 +59,7 @@ class ModeratorController extends Controller
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('addUserToPlaceOK', "Dodano użytkownika {$user->getUsername()} do tego miejsca");
+            $this->addFlash('success', "Dodano użytkownika {$user->getUsername()} do tego miejsca");
         }
 
         return $this->redirectToRoute('place_page', array('id' => $place->getId()));
@@ -84,7 +84,7 @@ class ModeratorController extends Controller
         $em->persist($p);
         $em->flush();
 
-        $this->addFlash('addItemToPlaceOK', 'Dodano przedmiot do tego miejca');
+        $this->addFlash('success', 'Dodano przedmiot do tego miejca');
         return $this->redirectToRoute('place_page', array('id' => $place->getId()));
     }
 
@@ -114,7 +114,7 @@ class ModeratorController extends Controller
 
         // TODO Usuwanie wszystkich przedmiotów kupionych przez usuwanego użytkownika w danym miejscu
 
-        $this->addFlash('addUserToPlaceOK', 'Usunięto użytkownika ' . $user->getUsername());
+        $this->addFlash('info', 'Usunięto użytkownika ' . $user->getUsername());
         return $this->redirectToRoute('place_page', array('id' => $placeId));
     }
 
@@ -137,7 +137,7 @@ class ModeratorController extends Controller
         $em->remove($item);
         $em->flush();
 
-        $this->addFlash('addItemToPlaceOK', 'Usunięto przedmiot');
+        $this->addFlash('info', 'Usunięto przedmiot');
         return $this->redirectToRoute('place_page', array('id' => $placeId));
     }
 }

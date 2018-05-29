@@ -182,7 +182,8 @@ class DefaultController extends Controller
         $em->persist($purchase);
         $em->flush();
 
-        $this->addFlash('addPurchase', 'Dodano zakup');
+//        $this->addFlash('addPurchase', 'Dodano zakup');
+        $this->addFlash('success', 'Dodano zakup');
         return $this->redirectToRoute('place_page', array('id' => $item->getPlace()->getId()));
     }
 
@@ -223,7 +224,7 @@ class DefaultController extends Controller
             $em->persist($msg);
             $em->flush();
 
-            $this->addFlash('addMessage', 'Dodano wiadomość');
+            $this->addFlash('success', 'Dodano wiadomość');
             return $this->redirectToRoute('messages_page', array('id' => $id));
         }
 
