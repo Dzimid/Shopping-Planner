@@ -13,6 +13,7 @@ class ModeratorController extends Controller
      * Create Place Action
      *
      * @param array $formData (name, description)
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createPlaceAction($formData)
@@ -22,7 +23,11 @@ class ModeratorController extends Controller
         $newPlace->setName($formData['name']);
         $newPlace->setDescription($formData['description']);
 
-        $user = $this->getDoctrine()->getRepository(User::class)->find($this->getUser());
+        $user =
+            $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($this->getUser());
+
         $user->addPlace($newPlace);
         $newPlace->addUser($user);
 
@@ -40,9 +45,10 @@ class ModeratorController extends Controller
      *
      * @param Place $place
      * @param array $formData (user_name)
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function addUserToPlaceAction($place, $formData)
+    public function addUserToPlaceAction(Place $place, $formData)
     {
         $this->denyAccessUnlessGranted('edit', $place);
 
@@ -67,7 +73,7 @@ class ModeratorController extends Controller
             $this->addFlash('success', "Dodano użytkownika {$user->getUsername()} do tego miejsca");
         }
 
-        return $this->redirectToRoute('place_page', array('id' => $place->getId()));
+        return $this->redirectToRoute('place_page', array('place' => $place->getId()));
     }
 
     /**
@@ -75,9 +81,10 @@ class ModeratorController extends Controller
      *
      * @param Place $place
      * @param array $formData (name)
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function addItemToPlaceAction($place, $formData)
+    public function addItemToPlaceAction(Place $place, $formData)
     {
         $this->denyAccessUnlessGranted('edit', $place);
 
@@ -90,28 +97,21 @@ class ModeratorController extends Controller
         $em->flush();
 
         $this->addFlash('success', 'Dodano przedmiot do tego miejca');
-        return $this->redirectToRoute('place_page', array('id' => $place->getId()));
+        return $this->redirectToRoute('place_page', array('place' => $place->getId()));
     }
 
     /**
      * Remove User from Place Action
      *
-     * @param int $placeId
-     * @param int $userId
+     * @param Place $place
+     * @param User  $user
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function removeUserFromPlaceAction($placeId, $userId)
+    public function removeUserFromPlaceAction(Place $place, User $user)
     {
-        if ($userId != $this->getUser()->getId()) {
-            $place = $this->getDoctrine()
-                ->getRepository(Place::class)
-                ->find($placeId);
-
+        if ($user->getId() != $this->getUser()->getId()) {
             $this->denyAccessUnlessGranted('edit', $place);
-
-            $user = $this->getDoctrine()
-                ->getRepository(User::class)
-                ->find($userId);
 
             $user->removePlace($place);
             $em = $this->getDoctrine()->getManager();
@@ -123,22 +123,19 @@ class ModeratorController extends Controller
             $this->addFlash('info', 'Usunięto użytkownika ' . $user->getUsername());
         }
 
-        return $this->redirectToRoute('place_page', array('id' => $placeId));
+        return $this->redirectToRoute('place_page', array('place' => $place->getId()));
     }
 
     /**
      * Remove Item from Place Action
      *
-     * @param int $placeId
-     * @param int $itemId
+     * @param Place $place
+     * @param Item  $item
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function removeItemFromPlaceAction($placeId, $itemId)
+    public function removeItemFromPlaceAction(Place $place, Item $item)
     {
-        $item = $this->getDoctrine()
-            ->getRepository(Item::class)
-            ->find($itemId);
-
         $this->denyAccessUnlessGranted('edit', $item);
 
         $em = $this->getDoctrine()->getManager();
@@ -146,6 +143,6 @@ class ModeratorController extends Controller
         $em->flush();
 
         $this->addFlash('info', 'Usunięto przedmiot');
-        return $this->redirectToRoute('place_page', array('id' => $placeId));
+        return $this->redirectToRoute('place_page', array('place' => $place->getId()));
     }
 }

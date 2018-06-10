@@ -12,13 +12,15 @@
             <h1 style="text-align: center; border-bottom:  2px solid black">
                 Miejsce o nazwie {{ placeInfo.name }}
             </h1>
-            <a class="button" style="float: right; margin: 3% 3% 0% 0%" href="{{ path('messages_page', {'id': placeInfo.id}) }}">Messages</a>
+            <a class="button" style="float: right; margin: 3% 3% 0% 0%"
+               href="{{ path('messages_page', {'place': placeInfo.id}) }}">Messages</a>
 
             <br>
             <div class="groupInfo">
                 <div>Opis miejsca: {{ placeInfo.description }}</div>
                 <div>Moderator: {{ placeInfo.moderator }}</div>
-                <a style="font-weight: bolder" class="placesLinkStyle" href="{{ path('places_page') }}">Powrót do listy miejsc</a>
+                <a style="font-weight: bolder" class="placesLinkStyle" href="{{ path('places_page') }}">Powrót do listy
+                    miejsc</a>
             </div>
         </div>
 
@@ -27,8 +29,8 @@
             <h4>Użytkownicy:</h4>
 
             {% for user in usersInPlace %}
-                {{ user.name }}
-                <a href="{{ path('removeUserFromPlace', {'placeId': placeInfo.id, 'userId': user.id}) }}"
+                {{ user.username }}
+                <a href="{{ path('removeUserFromPlace', {'place': placeInfo.id, 'user': user.id}) }}"
                    style="color: red;">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
@@ -43,7 +45,7 @@
 
             {% for item in itemsInPlace %}
                 {{ item.name }}
-                <a href="{{ path('removeItemFromPlace', {'itemId': item.id, 'placeId': placeInfo.id}) }}"
+                <a href="{{ path('removeItemFromPlace', {'item': item.id, 'place': placeInfo.id}) }}"
                    style="color: red;">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
@@ -64,19 +66,28 @@
                         </td>
                         {% for user in usersInPlace %}
 
-                            <td>{{ user.name }}</td>
+                            <td>{{ user.username }}</td>
 
                         {% endfor %}
                     </tr>
                     </thead>
                     <tbody>
                     {% for item in itemsInPlace %}
-                        <tr>
-                            <td>{{ item.name }}</td>
+                        <tr{% if item.mark == 1 %} style="background-color: #ff4f67" {% endif %}>
+                            <td>
+                                {{ item.name }}
+                                {% if 1 == item.mark %}
+                                    <a href="{{ path('unmarkItem', {'item': item.id, 'place': placeInfo.id}) }}"><span
+                                                class="glyphicon glyphicon-ok" style="color: green"></span></a>
+                                {% else %}
+                                    <a href="{{ path('markItem', {'item': item.id, 'place': placeInfo.id}) }}"><span
+                                                class="glyphicon glyphicon-exclamation-sign" style="color: red"></span></a>
+                                {% endif %}
+                            </td>
                             {% for user in usersInPlace %}
                                 <td>
                                     {% if user.id == app.user.id %}
-                                        <a href="{{ path('addPurchase', {'itemId': item.id}) }}">
+                                        <a href="{{ path('addPurchase', {'item': item.id}) }}">
                                             <span class="glyphicon glyphicon-shopping-cart"
                                                   style="color: green; font-size: 30px"></span>
                                         </a>

@@ -40,6 +40,7 @@ class DefaultController extends Controller
      * Places Action
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function placesAction(Request $request)         // TODO: Zabezpieczyć tę akcje
@@ -74,57 +75,32 @@ class DefaultController extends Controller
             ));
         }
 
-        return $this->render('places.html.twig', array('moderated' => $moderated, 'places' => $places, 'form' => $form->createView()));
+        return $this->render('places.html.twig', array(
+            'moderated' => $moderated,
+            'places' => $places,
+            'form' => $form->createView()));
     }
 
     /**
      * Place action
      *
-     * @param int $id
+     * @param Place   $place
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function placeAction($id, Request $request)        // TODO: Zabezpieczyć tę akcje
+    public function placeAction(Place $place, Request $request)        // TODO: Zabezpieczyć tę akcje
     {
-        $place = $this->getDoctrine()
-            ->getRepository(Place::class)
-            ->find($id);
-
         $purchase = $this->getDoctrine()
             ->getRepository(Purchase::class)
             ->getAllPurchaseByPlace($place);
 
-        $usersInPlace = array();
-        $itemsInPlace = array();
         $purchasePerUser = array(array());
-
-        /** @var User $usr */
-        foreach ($place->getUsers() as $usr) {
-            $usersInPlace[] = array(
-                'name' => $usr->getUsername(),
-                'id' => $usr->getId()
-            );
-        }
-
-        /** @var Item $itm */
-        foreach ($place->getItems() as $itm) {
-            $itemsInPlace[] = array(
-                'name' => $itm->getName(),
-                'id' => $itm->getId()
-            );
-        }
 
         /** @var Purchase $p */
         foreach ($purchase as $p) {
             $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = $p->getDate()->format('Y-m-d H:i:s');
         }
-
-        $placeInfo = array(
-            'id' => $place->getId(),
-            'name' => $place->getName(),
-            'description' => $place->getDescription(),
-            'moderator' => $place->getModerator(),
-        );
 
         /***USER FORM***/
 
@@ -152,11 +128,11 @@ class DefaultController extends Controller
 
         return $this->render('place.html.twig',
             array(
-                'placeInfo' => $placeInfo,
+                'placeInfo' => $place,
                 'userForm' => $userForm->createView(),
                 'itemForm' => $itemForm->createView(),
-                'usersInPlace' => $usersInPlace,
-                'itemsInPlace' => $itemsInPlace,
+                'usersInPlace' => $place->getUsers(),
+                'itemsInPlace' => $place->getItems(),
                 'purchasePerUser' => $purchasePerUser
             )
         );
@@ -165,16 +141,13 @@ class DefaultController extends Controller
     /**
      * Add Purchase action
      *
-     * @param int $itemId
+     * @param Item $item
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function addPurchaseAction($itemId)
+    public function addPurchaseAction(Item $item)
     {
-        /** @var Item $item */
-        $item = $this->getDoctrine()
-            ->getRepository(Item::class)
-            ->find($itemId);
-
+        $item->setMark(0);
         $purchase = new Purchase();
         $purchase->setDate(new \DateTime());
         $purchase->setUser($this->getUser());
@@ -182,24 +155,24 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($purchase);
+        $em->persist($item);
         $em->flush();
 
 //        $this->addFlash('addPurchase', 'Dodano zakup');
         $this->addFlash('success', 'Dodano zakup');
-        return $this->redirectToRoute('place_page', array('id' => $item->getPlace()->getId()));
+        return $this->redirectToRoute('place_page', array('place' => $item->getPlace()->getId()));
     }
 
     /**
      * Messages Action
      *
+     * @param Place   $place
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function messagesAction($id, Request $request)
+    public function messagesAction(Place $place, Request $request)
     {
-        $place = $this->getDoctrine()
-            ->getRepository(Place::class)
-            ->find($id);
-
         $messages = array();
 
         /** @var Message $message */
@@ -227,12 +200,47 @@ class DefaultController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'Dodano wiadomość');
-            return $this->redirectToRoute('messages_page', array('id' => $id));
+            return $this->redirectToRoute('messages_page', array('place' => $place->getId()));
         }
 
         return $this->render('messages.html.twig', array(
             'form' => $form->createView(),
             'messages' => array_reverse($messages)
         ));
+    }
+
+
+    /**
+     * @param Item  $item
+     * @param Place $place
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function markItemAction(Item $item, Place $place)
+    {
+        $item->setMark(1);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($item);
+        $em->flush();
+
+        return $this->redirectToRoute('place_page', ['place' => $place->getId()]);
+    }
+
+    /**
+     * @param Item  $item
+     * @param Place $place
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function unmarkItemAction(Item $item, Place $place)
+    {
+        $item->setMark(0);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($item);
+        $em->flush();
+
+        return $this->redirectToRoute('place_page', ['place' => $place->getId()]);
     }
 }

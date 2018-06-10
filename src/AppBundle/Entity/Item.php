@@ -54,6 +54,13 @@ class Item
      */
     private $boughtBy;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $mark;
+
     /****************************************/
 
     /**
@@ -118,5 +125,21 @@ class Item
     public function getBoughtBy()
     {
         return $this->boughtBy;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMark()
+    {
+        return $this->mark;
+    }
+
+    /**
+     * @param int $mark
+     */
+    public function setMark($mark)
+    {
+        $this->mark = $mark;
     }
 }
