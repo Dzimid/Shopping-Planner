@@ -15,25 +15,33 @@ places_page:
     defaults: {_controller: AppBundle:Default:places}
 
 place_page:
-    path: place/{id}
+    path: place/{place}
     defaults: {_controller: AppBundle:Default:place}
 
 messages_page:
-    path: /place/{id}/messages
+    path: /place/{place}/messages
     defaults: {_controller: AppBundle:Default:messages}
 
 addPurchase:
-    path: purchase/add/{itemId}
+    path: purchase/add/{item}
     defaults: {_controller: AppBundle:Default:addPurchase}
+
+markItem:
+    path: mark/{item}/place/{place}
+    defaults: {_controller: AppBundle:Default:markItem}
+
+unmarkItem:
+    path: unmark/{item}/place/{place}
+    defaults: {_controller: AppBundle:Default:unmarkItem}
 
 #MODERATOR
 
 removeUserFromPlace:
-    path: place/{placeId}/removeuser/{userId}
+    path: place/{place}/removeuser/{user}
     defaults: {_controller: AppBundle:Moderator:removeUserFromPlace}
 
 removeItemFromPlace:
-    path: place/{placeId}/removeitem/{itemId}
+    path: place/{place}/removeitem/{item}
     defaults: {_controller: AppBundle:Moderator:removeItemFromPlace}
 
 
