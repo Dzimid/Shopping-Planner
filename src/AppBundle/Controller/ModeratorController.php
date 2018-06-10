@@ -23,7 +23,11 @@ class ModeratorController extends Controller
         $newPlace->setName($formData['name']);
         $newPlace->setDescription($formData['description']);
 
-        $user = $this->getDoctrine()->getRepository(User::class)->find($this->getUser());
+        $user =
+            $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($this->getUser());
+
         $user->addPlace($newPlace);
         $newPlace->addUser($user);
 

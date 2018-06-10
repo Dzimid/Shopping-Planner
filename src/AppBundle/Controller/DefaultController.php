@@ -75,7 +75,10 @@ class DefaultController extends Controller
             ));
         }
 
-        return $this->render('places.html.twig', array('moderated' => $moderated, 'places' => $places, 'form' => $form->createView()));
+        return $this->render('places.html.twig', array(
+            'moderated' => $moderated,
+            'places' => $places,
+            'form' => $form->createView()));
     }
 
     /**
