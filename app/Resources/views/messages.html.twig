@@ -3,7 +3,7 @@
 {% block body %}
 
 
-    <a style="font-weight: bolder" class="placesLinkStyle" href="{{ path('place_page', {'id': app.request.attributes.get('id')}) }}">Powrót do miejsca</a>
+    <a style="font-weight: bolder" class="placesLinkStyle" href="{{ path('place_page', {'place': app.request.attributes.get('place').id}) }}">Powrót do miejsca</a>
     <div class="container text-center">
         <div class="row">
             <div class="col-sm-3 well">
