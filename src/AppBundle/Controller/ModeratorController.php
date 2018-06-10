@@ -22,7 +22,12 @@ class ModeratorController extends Controller
         $newPlace->setName($formData['name']);
         $newPlace->setDescription($formData['description']);
 
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->getUser());
+        $user->addPlace($newPlace);
+        $newPlace->addUser($user);
+
         $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
         $em->persist($newPlace);
         $em->flush();
 
@@ -97,24 +102,27 @@ class ModeratorController extends Controller
      */
     public function removeUserFromPlaceAction($placeId, $userId)
     {
-        $place = $this->getDoctrine()
-            ->getRepository(Place::class)
-            ->find($placeId);
+        if ($userId != $this->getUser()->getId()) {
+            $place = $this->getDoctrine()
+                ->getRepository(Place::class)
+                ->find($placeId);
 
-        $this->denyAccessUnlessGranted('edit', $place);
+            $this->denyAccessUnlessGranted('edit', $place);
 
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->find($userId);
+            $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->find($userId);
 
-        $user->removePlace($place);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($user);
-        $em->flush();
+            $user->removePlace($place);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
 
-        // TODO Usuwanie wszystkich przedmiotów kupionych przez usuwanego użytkownika w danym miejscu
+            // TODO Usuwanie wszystkich przedmiotów kupionych przez usuwanego użytkownika w danym miejscu
 
-        $this->addFlash('info', 'Usunięto użytkownika ' . $user->getUsername());
+            $this->addFlash('info', 'Usunięto użytkownika ' . $user->getUsername());
+        }
+
         return $this->redirectToRoute('place_page', array('id' => $placeId));
     }
 

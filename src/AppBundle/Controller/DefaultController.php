@@ -58,7 +58,9 @@ class DefaultController extends Controller
 
         /** @var Place $place */
         foreach ($user->getPlaces() as $place) {
-            $places[] = array('name' => $place->getName(),  'id' => $place->getId());
+            if ($place->getModerator() != $this->getUser()) {
+                $places[] = array('name' => $place->getName(), 'id' => $place->getId());
+            }
         }
 
         //FORM
