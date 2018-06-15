@@ -4,6 +4,29 @@
     <meta charset="UTF-8"/>
     <title>{% block title %}Welcome!{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120685743-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120685743-1');
+    </script>
+
+    {#AddSense#}
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXX"
+         data-ad-test="on"
+         data-ad-slot="XXX"
+         data-ad-format="auto"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+
     <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap.min.css') }}">
     <link href="{{ asset('bundles/app/css/style.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">

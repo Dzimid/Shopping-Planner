@@ -15,6 +15,7 @@ function initMap() {
         navigator.geolocation.getCurrentPosition(function (position) {
             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(initialLocation);
+            var marker = new google.maps.Marker({position: initialLocation, map: map});
         });
     }
 
