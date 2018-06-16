@@ -91,15 +91,61 @@ class DefaultController extends Controller
      */
     public function placeAction(Place $place, Request $request)        // TODO: Zabezpieczyć tę akcje
     {
-        $purchase = $this->getDoctrine()
+        $em = $this->getDoctrine()->getManager();
+
+        $purchase = $em
             ->getRepository(Purchase::class)
             ->getAllPurchaseByPlace($place);
-
         $purchasePerUser = array(array());
+        $latestPurchase = array();
+        $usersInPlace = $place->getUsers();
+
+        /** @var Item $item */
+        foreach ($place->getItems() as $item) {
+            $latestPurchase[$item->getId()] = $em
+                ->getRepository(Purchase::class)
+                ->getLatestPurchaseQuery($item)
+                ->getResult();
+
+            /** @var User $u */
+            foreach ($usersInPlace as $u) {
+                $allUsers = false;
+
+                /** @var Purchase $p */
+                foreach ($latestPurchase[$item->getId()] as $p) {
+                    if ($p->getUser()->getId() == $u->getId()) {
+                        $allUsers = true;
+                        break;
+                    }
+                }
+
+                if (!$allUsers) {
+                    $latestPurchase[$item->getId()] = array();
+                }
+            }
+        }
 
         /** @var Purchase $p */
         foreach ($purchase as $p) {
-            $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = $p->getDate()->format('Y-m-d H:i:s');
+            $date = $p->getDate();
+            $currentDate = new \DateTime();
+            $diff = $currentDate->diff($date);
+
+            switch ($diff->days) {
+                case 0:
+                    $dt = 'Dzisiaj';
+                    break;
+                case 1:
+                    $dt = 'Wczoraj';
+                    break;
+                default:
+                    $dt = $diff->days . ' dni temu';
+            }
+
+            $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = [
+                $dt,
+                $p->getId(),
+            ];
         }
 
         /***USER FORM***/
@@ -133,7 +179,8 @@ class DefaultController extends Controller
                 'itemForm' => $itemForm->createView(),
                 'usersInPlace' => $place->getUsers(),
                 'itemsInPlace' => $place->getItems(),
-                'purchasePerUser' => $purchasePerUser
+                'purchasePerUser' => $purchasePerUser,
+                'latest' => $latestPurchase,
             )
         );
     }
@@ -158,9 +205,24 @@ class DefaultController extends Controller
         $em->persist($item);
         $em->flush();
 
-//        $this->addFlash('addPurchase', 'Dodano zakup');
         $this->addFlash('success', 'Dodano zakup');
         return $this->redirectToRoute('place_page', array('place' => $item->getPlace()->getId()));
+    }
+
+    /**
+     * @param Purchase $purchase
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removePurchaseAction(Purchase $purchase, Place $place)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($purchase);
+        $em->flush();
+
+        return $this->redirectToRoute('place_page', [
+            'place' => $place->getId()
+        ]);
     }
 
     /**

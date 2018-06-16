@@ -149,6 +149,14 @@ class Place
     }
 
     /**
+     * @param User $user
+     */
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
+    }
+
+    /**
      * @return mixed
      */
     public function getItems()

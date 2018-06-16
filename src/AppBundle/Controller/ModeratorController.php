@@ -3,9 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
+use AppBundle\Entity\Message;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
+use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class ModeratorController extends Controller
 {
@@ -38,6 +42,71 @@ class ModeratorController extends Controller
 
         $this->addFlash('success', 'Dodano nowe miejsce');
         return $this->redirectToRoute('places_page');
+    }
+
+    /**
+     * Remove Place Action
+     *
+     * @param Place $place
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removePlaceAction(Place $place)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var User $user */
+        foreach ($place->getUsers() as $user) {
+            /** @var Purchase $boughtItem */
+            foreach ($user->getBoughtItems() as $boughtItem) {
+                $em->remove($boughtItem);
+            }
+
+            $place->removeUser($user);
+        }
+
+        /** @var Item $item */
+        foreach ($place->getItems() as $item) {
+            $em->remove($item);
+        }
+
+        /** @var Message $message */
+        foreach ($place->getMessages() as $message) {
+            $em->remove($message);
+        }
+
+        $em->remove($place);
+        $em->flush();
+
+        return $this->redirectToRoute('places_page');
+    }
+
+    /**
+     * Edit Place Action
+     *
+     * @param Request $request
+     * @param Place   $place
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editPlaceAction(Request $request, Place $place)
+    {
+        $form = $this->createForm(PlaceForm::class, $place);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $editedPlace = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($editedPlace);
+            $em->flush();
+
+            return $this->redirectToRoute('places_page');
+        }
+
+        return $this->render('placeEdit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
