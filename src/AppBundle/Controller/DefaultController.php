@@ -99,7 +99,10 @@ class DefaultController extends Controller
 
         /** @var Purchase $p */
         foreach ($purchase as $p) {
-            $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = $p->getDate()->format('Y-m-d H:i:s');
+            $purchasePerUser[$p->getUser()->getId()][$p->getItem()->getId()][] = [
+                $p->getDate()->format('Y-m-d H:i:s'),
+                $p->getId(),
+            ];
         }
 
         /***USER FORM***/
@@ -158,9 +161,24 @@ class DefaultController extends Controller
         $em->persist($item);
         $em->flush();
 
-//        $this->addFlash('addPurchase', 'Dodano zakup');
         $this->addFlash('success', 'Dodano zakup');
         return $this->redirectToRoute('place_page', array('place' => $item->getPlace()->getId()));
+    }
+
+    /**
+     * @param Purchase $purchase
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removePurchaseAction(Purchase $purchase, Place $place)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($purchase);
+        $em->flush();
+
+        return $this->redirectToRoute('place_page', [
+            'place' => $place->getId()
+        ]);
     }
 
     /**

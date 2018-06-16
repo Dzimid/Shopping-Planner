@@ -34,6 +34,10 @@ addPurchase:
     path: purchase/add/{item}
     defaults: {_controller: AppBundle:Default:addPurchase}
 
+remove_purchase:
+    path: place/{place}/purchase/remove/{purchase}
+    defaults: {_controller: AppBundle:Default:removePurchase}
+
 markItem:
     path: mark/{item}/place/{place}
     defaults: {_controller: AppBundle:Default:markItem}
