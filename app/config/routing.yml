@@ -18,6 +18,10 @@ place_page:
     path: place/{place}
     defaults: {_controller: AppBundle:Default:place}
 
+remove_place:
+    path: place/remove/{place}
+    defaults: {_controller: AppBundle:Moderator:removePlace}
+
 messages_page:
     path: /place/{place}/messages
     defaults: {_controller: AppBundle:Default:messages}

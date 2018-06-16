@@ -3,7 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Item;
+use AppBundle\Entity\Message;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -37,6 +39,43 @@ class ModeratorController extends Controller
         $em->flush();
 
         $this->addFlash('success', 'Dodano nowe miejsce');
+        return $this->redirectToRoute('places_page');
+    }
+
+    /**
+     * Remove Place Action
+     *
+     * @param Place $place
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removePlaceAction(Place $place)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var User $user */
+        foreach ($place->getUsers() as $user) {
+            /** @var Purchase $boughtItem */
+            foreach ($user->getBoughtItems() as $boughtItem) {
+                $em->remove($boughtItem);
+            }
+
+            $place->removeUser($user);
+        }
+
+        /** @var Item $item */
+        foreach ($place->getItems() as $item) {
+            $em->remove($item);
+        }
+
+        /** @var Message $message */
+        foreach ($place->getMessages() as $message) {
+            $em->remove($message);
+        }
+
+        $em->remove($place);
+        $em->flush();
+
         return $this->redirectToRoute('places_page');
     }
 
