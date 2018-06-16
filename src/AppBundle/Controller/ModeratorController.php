@@ -7,7 +7,9 @@ use AppBundle\Entity\Message;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Purchase;
 use AppBundle\Entity\User;
+use AppBundle\Form\PlaceForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class ModeratorController extends Controller
 {
@@ -77,6 +79,34 @@ class ModeratorController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('places_page');
+    }
+
+    /**
+     * Edit Place Action
+     *
+     * @param Request $request
+     * @param Place   $place
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editPlaceAction(Request $request, Place $place)
+    {
+        $form = $this->createForm(PlaceForm::class, $place);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $editedPlace = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($editedPlace);
+            $em->flush();
+
+            return $this->redirectToRoute('places_page');
+        }
+
+        return $this->render('placeEdit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

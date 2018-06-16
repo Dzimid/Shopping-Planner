@@ -18,6 +18,7 @@
                 {% for place in moderated %}
                     <div class="placesContainer well">
                         <a class="placesLinkStyle" href="{{ path('place_page', {'place': place.id}) }}">{{ place.name }}</a>
+                        <a href="{{ path('edit_place', {'place': place.id}) }}"><span style="color: blue" class="glyphicon glyphicon-edit"></span></a>
                         <a href="{{ path('remove_place', {'place': place.id}) }}"><span style="color: red" class="glyphicon glyphicon-remove"></span></a>
                         <br>
                     </div>
