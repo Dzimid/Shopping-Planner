@@ -1,0 +1,49 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            {% if error %}
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ error.messageKey|trans(error.messageData, 'security') }}</strong>
+                </div>
+            {% endif %}
+
+            <form action="{{ path("fos_user_security_check") }}" method="post" role="form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                <h1><span class="glyphicon glyphicon-lock"></span> Logowanie</h1><br>
+                <form>
+                    <div class="form-group">
+                        <label for="username"><span
+                                    class="glyphicon glyphicon-user"></span> {{ 'security.login.username'|trans }}
+                        </label>
+                        <input type="text" class="form-control" id="username" name="_username"
+                               value="{{ last_username }}"
+                               required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><span
+                                    class="glyphicon glyphicon-eye-open"></span> {{ 'security.login.password'|trans }}
+                        </label>
+                        <input type="password" class="form-control" id="password" name="_password" required="required"/>
+                    </div>
+                    <div class="checkbox">
+                        <label for="remember_me"><input type="checkbox" id="remember_me" name="_remember_me"
+                                                        value="on"/>
+                            {{ 'security.login.remember_me'|trans }}</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="login login-submit btn btn-primary" id="_submit" name="_submit"
+                               value="{{ 'security.login.submit'|trans }}"/>
+                    </div>
+                </form>
+                <div class="login-help">
+                    <a href="{{ path('fos_user_registration_register') }}">Zarejestruj</a> -
+                    <a href="{{ path('fos_user_resetting_request') }}">Zapomniałeś hasła?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}
