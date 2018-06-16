@@ -13,14 +13,16 @@ use Doctrine\ORM\EntityRepository;
 class PurchaseRepository extends EntityRepository
 {
     /**
-     * @param $place
+     * @param Place $place
+     *
      * @return Purchase[]|array
      */
-    public function getAllPurchaseByPlace($place)
+    public function getAllPurchaseByPlace(Place $place)
     {
         $items = $place->getItems();
         $ids = array();
 
+        /** @var Item $item */
         foreach ($items as $item) {
             $ids[] = $item->getId();
         }
@@ -29,6 +31,22 @@ class PurchaseRepository extends EntityRepository
             ->getRepository(Purchase::class)
             ->findBy(array('item' => $ids));
 
-        return $purchase;
+        return array_reverse($purchase);
+    }
+
+    /**
+     * @param Item $item
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    public function getLatestPurchaseQuery(Item $item)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.item = :item')
+            ->setParameters([
+                ':item' => $item
+            ])
+            ->orderBy('p.date', 'ASC')
+            ->getQuery();
     }
 }

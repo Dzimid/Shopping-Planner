@@ -85,7 +85,7 @@
                                 {% endif %}
                             </td>
                             {% for user in usersInPlace %}
-                                <td>
+                                <td{% if latest[item.id][0] is defined and latest[item.id][0].user.id == user.id %} style="background-color: red"{% endif %}>
                                     {% if user.id == app.user.id %}
                                         <a href="{{ path('addPurchase', {'item': item.id}) }}">
                                             <span class="glyphicon glyphicon-shopping-cart"
@@ -96,7 +96,11 @@
                                         {% for d in purchasePerUser[user.id][item.id] %}
                                             <div class="purchase-date">
                                                 {{ d[0] }}
-                                                <a href="{{ path('remove_purchase', {'place': placeInfo.id, 'purchase': d[1]}) }}"><span style="color: red;" class="glyphicon glyphicon-remove"></span></a>
+                                                {% if user.id == app.user.id %}
+                                                    <a href="{{ path('remove_purchase', {'place': placeInfo.id, 'purchase': d[1]}) }}"><span
+                                                                style="color: red;"
+                                                                class="glyphicon glyphicon-remove"></span></a>
+                                                {% endif %}
                                             </div>
                                         {% endfor %}
                                     {% endif %}
