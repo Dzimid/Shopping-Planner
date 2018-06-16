@@ -85,7 +85,7 @@
                                 {% endif %}
                             </td>
                             {% for user in usersInPlace %}
-                                <td{% if latest[item.id][0] is defined and latest[item.id][0].user.id == user.id %} style="background-color: red"{% endif %}>
+                                <td{% if purchasePerUser[user.id][item.id] is not defined or latest[item.id][0] is defined and latest[item.id][0].user.id == user.id %} style="background-color: orange"{% endif %}>
                                     {% if user.id == app.user.id %}
                                         <a href="{{ path('addPurchase', {'item': item.id}) }}">
                                             <span class="glyphicon glyphicon-shopping-cart"
