@@ -267,15 +267,19 @@ class DefaultController extends Controller
         $latestPurchase = $em
             ->getRepository(Purchase::class)
             ->getLatestPurchase($item, $place);
-        $to = $em
-            ->getRepository(User::class)
-            ->find($latestPurchase);
 
         $item->setMark(1);
-        $alert = new Alert('Przypomnienie o produkcie', new \DateTime(), $to, $this->getUser());
+
+        if (!empty($latestPurchase)) {
+            $to = $em
+                ->getRepository(User::class)
+                ->find($latestPurchase);
+            $alert = new Alert('Przypomnienie o produkcie', new \DateTime(), $to, $this->getUser());
+            $em->persist($alert);
+            $this->addFlash('success', 'Wysłano przypomnienie do ' . $to->getUsername());
+        }
 
         $em->persist($item);
-        $em->persist($alert);
         $em->flush();
 
         return $this->redirectToRoute('place_page', ['place' => $place->getId()]);

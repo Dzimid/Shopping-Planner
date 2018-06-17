@@ -45,6 +45,7 @@ class PurchaseRepository extends EntityRepository
     {
         $date = array();
 
+        /** @var User $user */
         foreach ($place->getUsers() as $user) {
             /** @var array $purchase */
             $purchase = $this->createQueryBuilder('p')
@@ -62,7 +63,7 @@ class PurchaseRepository extends EntityRepository
             if (!empty($purchase)) {
                 $date[$purchase[0]->getUser()->getId()] = $purchase[0]->getDate()->getTimestamp();
             } else {
-                return null;
+                $date[$user->getId()] = 0;
             }
         }
 
