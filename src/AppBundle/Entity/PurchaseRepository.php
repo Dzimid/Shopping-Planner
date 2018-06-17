@@ -35,18 +35,38 @@ class PurchaseRepository extends EntityRepository
     }
 
     /**
-     * @param Item $item
+     * @param Item  $item
      *
-     * @return \Doctrine\ORM\Query
+     * @param Place $place
+     *
+     * @return array
      */
-    public function getLatestPurchaseQuery(Item $item)
+    public function getLatestPurchase(Item $item, Place $place)
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.item = :item')
-            ->setParameters([
-                ':item' => $item
-            ])
-            ->orderBy('p.date', 'ASC')
-            ->getQuery();
+        $date = array();
+
+        foreach ($place->getUsers() as $user) {
+            /** @var array $purchase */
+            $purchase = $this->createQueryBuilder('p')
+                ->where('p.item = :item')
+                ->andWhere('p.user = :user')
+                ->setParameters([
+                    ':item' => $item,
+                    ':user' => $user,
+                ])
+                ->orderBy('p.date', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getResult();
+
+            if (!empty($purchase)) {
+                $date[$purchase[0]->getUser()->getId()] = $purchase[0]->getDate()->getTimestamp();
+            } else {
+                return null;
+            }
+        }
+
+        asort($date);
+        return key($date);
     }
 }
