@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Alert;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\Place;
@@ -285,5 +286,40 @@ class DefaultController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('place_page', ['place' => $place->getId()]);
+    }
+
+    /**
+     * Alert list Action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function alertListAction()
+    {
+        $alerts = $this
+            ->getDoctrine()
+            ->getRepository(Alert::class)
+            ->findBy([
+                'user' => $this->getUser()
+            ]);
+
+        return $this->render('alertList.html.twig', [
+            'alerts' => $alerts
+        ]);
+    }
+
+    /**
+     * Alert remove Action
+     *
+     * @param Alert $alert
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function alertRemoveAction(Alert $alert)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($alert);
+        $em->flush();
+
+        return $this->redirectToRoute('alertList');
     }
 }

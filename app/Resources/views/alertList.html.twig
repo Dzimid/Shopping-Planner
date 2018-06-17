@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Od</th>
+                <th>Data</th>
+                <th>Treść</th>
+                <th>Akcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for alert in alerts %}
+            <tr>
+                <td>{{ alert.from }}</td>
+                <td>{{ alert.date | date('Y-m-m H:i:s') }}</td>
+                <td>{{ alert.content }}</td>
+                <td><a href="{{ path('alertRemove', {'alert': alert.id}) }}" class="btn btn-xs btn-danger">Usuń</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    Powiadomienia
+{% endblock %}
+

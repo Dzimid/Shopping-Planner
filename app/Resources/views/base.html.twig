@@ -131,7 +131,7 @@
                         </a>
                         <div class="dropdown-menu" style="padding: 20px">
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                                <a href="#">
+                                <a href="{{ path('alertList') }}">
                                     <nobr>
                                         Powiadomienia
                                         <span class="glyphicon glyphicon-alert"></span>
