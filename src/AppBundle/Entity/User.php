@@ -48,6 +48,14 @@ class User extends BaseUser
      */
     private $messages;
 
+    /**
+     * @var Alert[]
+     *
+     * One user many alerts
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Alert", mappedBy="user")
+     */
+    private $alerts;
+
     /*************************************/
 
     /**
@@ -118,5 +126,13 @@ class User extends BaseUser
     public function getBoughtItems()
     {
         return $this->boughtItems;
+    }
+
+    /**
+     * @return Alert[]
+     */
+    public function getAlerts()
+    {
+        return $this->alerts;
     }
 }
