@@ -129,12 +129,20 @@
                             <span class="glyphicon glyphicon-user"></span>
                             <span class="caret"></span>
                         </a>
-                        <div class="dropdown-menu">
+                        <div class="dropdown-menu" style="padding: 20px">
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                                 <a href="#">
-                                    Powiadomienia
-                                    <span class="glyphicon glyphicon-alert"></span>
+                                    <nobr>
+                                        Powiadomienia
+                                        <span class="glyphicon glyphicon-alert"></span>
+                                    </nobr>
                                 </a>
+                                <br>
+                                <a href="{{ path('fos_user_profile_show') }}">
+                                    Profil
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </a>
+                                <hr>
                                 <a href="{{ path('fos_user_security_logout') }}">
                                     {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
                                     <span class="glyphicon glyphicon-log-out"></span>
