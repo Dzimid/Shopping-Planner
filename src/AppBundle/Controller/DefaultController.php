@@ -262,10 +262,20 @@ class DefaultController extends Controller
      */
     public function markItemAction(Item $item, Place $place)
     {
-        $item->setMark(1);
-
         $em = $this->getDoctrine()->getManager();
+
+        $latestPurchase = $em
+            ->getRepository(Purchase::class)
+            ->getLatestPurchase($item, $place);
+        $to = $em
+            ->getRepository(User::class)
+            ->find($latestPurchase);
+
+        $item->setMark(1);
+        $alert = new Alert('Przypomnienie o produkcie', new \DateTime(), $to, $this->getUser());
+
         $em->persist($item);
+        $em->persist($alert);
         $em->flush();
 
         return $this->redirectToRoute('place_page', ['place' => $place->getId()]);

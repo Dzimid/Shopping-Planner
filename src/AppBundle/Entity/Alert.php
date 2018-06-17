@@ -50,9 +50,25 @@ class Alert
      *
      * Many alerts one user
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="from", referencedColumnName="id")
+     * @ORM\JoinColumn(name="sender", referencedColumnName="id")
      */
-    private $from;
+    private $sender;
+
+    /**
+     * Alert constructor.
+     *
+     * @param string    $content
+     * @param \DateTime $date
+     * @param User      $user
+     * @param User      $from
+     */
+    public function __construct($content, \DateTime $date, User $user, User $from)
+    {
+        $this->content = $content;
+        $this->date = $date;
+        $this->user = $user;
+        $this->sender = $from;
+    }
 
     /******************************/
 
@@ -115,16 +131,16 @@ class Alert
     /**
      * @return User
      */
-    public function getFrom()
+    public function getSender()
     {
-        return $this->from;
+        return $this->sender;
     }
 
     /**
-     * @param User $from
+     * @param User $sender
      */
-    public function setFrom($from)
+    public function setSender($sender)
     {
-        $this->from = $from;
+        $this->sender = $sender;
     }
 }
