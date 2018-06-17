@@ -98,31 +98,12 @@ class DefaultController extends Controller
             ->getAllPurchaseByPlace($place);
         $purchasePerUser = array(array());
         $latestPurchase = array();
-        $usersInPlace = $place->getUsers();
 
         /** @var Item $item */
         foreach ($place->getItems() as $item) {
             $latestPurchase[$item->getId()] = $em
                 ->getRepository(Purchase::class)
-                ->getLatestPurchaseQuery($item)
-                ->getResult();
-
-            /** @var User $u */
-            foreach ($usersInPlace as $u) {
-                $allUsers = false;
-
-                /** @var Purchase $p */
-                foreach ($latestPurchase[$item->getId()] as $p) {
-                    if ($p->getUser()->getId() == $u->getId()) {
-                        $allUsers = true;
-                        break;
-                    }
-                }
-
-                if (!$allUsers) {
-                    $latestPurchase[$item->getId()] = array();
-                }
-            }
+                ->getLatestPurchase($item, $place);
         }
 
         /** @var Purchase $p */
