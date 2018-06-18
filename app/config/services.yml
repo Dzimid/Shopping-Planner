@@ -21,3 +21,9 @@ services:
             - { name: security.voter }
 
         public: false
+
+    app.twig.globals_extension:
+         class: AppBundle\Twig\Extension\GlobalsExtension
+         arguments: ["@doctrine.orm.entity_manager"]
+         tags:
+             - { name: twig.extension }
