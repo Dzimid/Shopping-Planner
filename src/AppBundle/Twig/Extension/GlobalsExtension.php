@@ -6,21 +6,32 @@ namespace AppBundle\Twig\Extension;
 use AppBundle\Entity\Alert;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class GlobalsExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     protected $em;
+    protected $tokenStorage;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, TokenStorageInterface $tokenStorage)
     {
         $this->em = $entityManager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getGlobals()
     {
-        $user = $this->em->getRepository(User::class)->find(1);
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof User) {
+            $newAlerts = $this->em->getRepository(Alert::class)->getNotReadNum($user);
+        } else {
+            $newAlerts = 0;
+        }
+
         return array (
-            "newAlerts" => $this->em->getRepository(Alert::class)->getNotReadNum($user),
+            "newAlerts" => $newAlerts,
+            'asd' => 'asdasd'
         );
     }
 

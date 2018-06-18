@@ -24,6 +24,6 @@ services:
 
     app.twig.globals_extension:
          class: AppBundle\Twig\Extension\GlobalsExtension
-         arguments: ["@doctrine.orm.entity_manager"]
+         arguments: ["@doctrine.orm.entity_manager", @security.token_storage]
          tags:
              - { name: twig.extension }
