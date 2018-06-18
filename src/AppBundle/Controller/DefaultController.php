@@ -317,7 +317,7 @@ class DefaultController extends Controller
                 'user' => $this->getUser()
             ]);
         $render = $this->render('alertList.html.twig', [
-            'alerts' => $alerts
+            'alerts' => array_reverse($alerts)
         ]);
 
         foreach ($alerts as $alert) {
