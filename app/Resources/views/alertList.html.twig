@@ -14,7 +14,7 @@
             </thead>
             <tbody>
             {% for alert in alerts %}
-            <tr>
+            <tr{% if 1 == alert.status %} class="bg-info" {% endif %}>
                 <td>{{ alert.sender }}</td>
                 <td>{{ alert.date | date('Y-m-m H:i:s') }}</td>
                 <td>{{ alert.content }}</td>

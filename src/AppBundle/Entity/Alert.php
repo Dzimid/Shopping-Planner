@@ -55,6 +55,15 @@ class Alert
     private $sender;
 
     /**
+     * @var int
+     * 1 - nieprzeczytany
+     * 2 - przeczytany
+     *
+     * @ORM\Column(type="integer", nullable=false, options={"default": 1})
+     */
+    private $status;
+
+    /**
      * Alert constructor.
      *
      * @param string    $content
@@ -62,12 +71,13 @@ class Alert
      * @param User      $user
      * @param User      $from
      */
-    public function __construct($content, \DateTime $date, User $user, User $from)
+    public function __construct($content, \DateTime $date, User $user, User $from, $status)
     {
-        $this->content = $content;
-        $this->date = $date;
-        $this->user = $user;
-        $this->sender = $from;
+        $this->setContent($content);
+        $this->setDate($date);
+        $this->setUser($user);
+        $this->setSender($from);
+        $this->setStatus($status);
     }
 
     /******************************/
@@ -142,5 +152,21 @@ class Alert
     public function setSender($sender)
     {
         $this->sender = $sender;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 }

@@ -274,9 +274,9 @@ class DefaultController extends Controller
             $to = $em
                 ->getRepository(User::class)
                 ->find($latestPurchase);
-            $alert = new Alert('Przypomnienie o produkcie', new \DateTime(), $to, $this->getUser());
+            $alert = new Alert('Przypomnienie o kupnie/zrealizowaniu przedmiotu ' . $item->getName(), new \DateTime(), $to, $this->getUser(), 1);
             $em->persist($alert);
-            $this->addFlash('success', 'Wysłano przypomnienie do ' . $to->getUsername());
+            $this->addFlash('success', 'Wysłano przypomnienie do uzytkownika ' . $to->getUsername());
         }
 
         $em->persist($item);
@@ -309,16 +309,25 @@ class DefaultController extends Controller
      */
     public function alertListAction()
     {
-        $alerts = $this
-            ->getDoctrine()
+        $em = $this->getDoctrine()->getManager();
+
+        $alerts = $em
             ->getRepository(Alert::class)
             ->findBy([
                 'user' => $this->getUser()
             ]);
-
-        return $this->render('alertList.html.twig', [
+        $render = $this->render('alertList.html.twig', [
             'alerts' => $alerts
         ]);
+
+        foreach ($alerts as $alert) {
+            $alert->setStatus(2);
+            $em->persist($alert);
+        }
+
+        $em->flush();
+
+        return $render;
     }
 
     /**
