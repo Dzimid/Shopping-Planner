@@ -156,11 +156,17 @@
                                     <span class="glyphicon glyphicon-log-out"></span>
                                 </a>
                             {% else %}
-                                <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}
-                                    <span class="glyphicon glyphicon-log-in"></span>
+                                <a href="{{ path('fos_user_security_login') }}">
+                                    <nobr>
+                                        {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+                                        <span class="glyphicon glyphicon-log-in"></span>
+                                    </nobr>
                                 </a>
-                                <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}
-                                    <span class="glyphicon glyphicon-plus"></span>
+                                <a href="{{ path('fos_user_registration_register') }}">
+                                    <nobr>
+                                        {{ 'layout.register'|trans({}, 'FOSUserBundle') }}
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </nobr>
                                 </a>
                             {% endif %}
                         </div>
