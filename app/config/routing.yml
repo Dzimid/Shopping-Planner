@@ -46,6 +46,14 @@ unmarkItem:
     path: unmark/{item}/place/{place}
     defaults: {_controller: AppBundle:Default:unmarkItem}
 
+alertList:
+    path: alerts
+    defaults: {_controller: AppBundle:Default:alertList}
+
+alertRemove:
+    path: alert/{alert}/remove
+    defaults: {_controller: AppBundle:Default:alertRemove}
+
 #MODERATOR
 
 removeUserFromPlace:

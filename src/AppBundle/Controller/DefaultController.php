@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Alert;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\Place;
@@ -261,9 +262,23 @@ class DefaultController extends Controller
      */
     public function markItemAction(Item $item, Place $place)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $latestPurchase = $em
+            ->getRepository(Purchase::class)
+            ->getLatestPurchase($item, $place);
+
         $item->setMark(1);
 
-        $em = $this->getDoctrine()->getManager();
+        if (!empty($latestPurchase)) {
+            $to = $em
+                ->getRepository(User::class)
+                ->find($latestPurchase);
+            $alert = new Alert('Przypomnienie o kupnie/zrealizowaniu przedmiotu ' . $item->getName(), new \DateTime(), $to, $this->getUser(), 1);
+            $em->persist($alert);
+            $this->addFlash('success', 'Wysłano przypomnienie do uzytkownika ' . $to->getUsername());
+        }
+
         $em->persist($item);
         $em->flush();
 
@@ -285,5 +300,49 @@ class DefaultController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('place_page', ['place' => $place->getId()]);
+    }
+
+    /**
+     * Alert list Action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function alertListAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $alerts = $em
+            ->getRepository(Alert::class)
+            ->findBy([
+                'user' => $this->getUser()
+            ]);
+        $render = $this->render('alertList.html.twig', [
+            'alerts' => array_reverse($alerts)
+        ]);
+
+        foreach ($alerts as $alert) {
+            $alert->setStatus(2);
+            $em->persist($alert);
+        }
+
+        $em->flush();
+
+        return $render;
+    }
+
+    /**
+     * Alert remove Action
+     *
+     * @param Alert $alert
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function alertRemoveAction(Alert $alert)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($alert);
+        $em->flush();
+
+        return $this->redirectToRoute('alertList');
     }
 }

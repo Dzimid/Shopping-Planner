@@ -9,7 +9,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120685743-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
 
         gtag('config', 'UA-120685743-1');
@@ -28,7 +32,7 @@
 
 
     <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap.min.css') }}">
-    <link href="{{ asset('bundles/app/css/style.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/app/css/style.css') }}" rel="stylesheet"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="{{ asset('bundles/app/js/jquery-3.3.1.min.js') }}"></script>
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>#}
@@ -80,95 +84,114 @@
                 height: auto;
                 padding: 15px;
             }
+
             .row.content {
                 height: auto;
             }
         }
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     {% block stylesheets %}
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     {% endblock %}
 </head>
 <body>
-    <div class="container">
+<div class="container">
 
 
-        {% block slajder_container %}
-            <div class="subpages_picture  text-center">
-                <a href="{{ path('home_page') }}">
-                    <span class="font1">Shopping Planner</span>
-                </a>
+    {% block slajder_container %}
+        <div class="subpages_picture  text-center">
+            <a href="{{ path('home_page') }}">
+                <span class="font1">Shopping Planner</span>
+            </a>
+        </div>
+    {% endblock %}
+
+    {% block slider %}
+    {% endblock %}
+
+
+    {#MENU#}
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ path('home_page') }}">Home</a>
             </div>
-        {% endblock %}
 
-        {% block slider %}
-        {% endblock %}
-
-
-        {#MENU#}
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="{{ path('home_page') }}">Home</a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="myNavbar">
-                    <ul class="nav navbar-nav">
-                        <li><a href="{{ path('places_page') }}">Group</a></li>
-                        {#<li><a href="{{ path('messages_page') }}">Messages</a></li>#}
-                        <li><a href="{{ path('map_page') }}">Map</a></li>
-                    </ul>
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ path('fos_user_profile_show') }}"><span class="glyphicon glyphicon-user"></span> My Account |</a></li>
-                        <div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ path('places_page') }}">Group</a></li>
+                    <li><a href="{{ path('map_page') }}">Map</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu" style="padding: 20px">
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                <a href="{{ path('alertList') }}">
+                                    <nobr>
+                                        Powiadomienia
+                                        <span class="glyphicon glyphicon-alert"></span>
+                                    </nobr>
+                                </a>
+                                <br>
+                                <a href="{{ path('fos_user_profile_show') }}">
+                                    Profil
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </a>
+                                <hr>
                                 <a href="{{ path('fos_user_security_logout') }}">
                                     {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                    <span class="glyphicon glyphicon-log-out"></span>
                                 </a>
-                                <span class="glyphicon glyphicon-log-out"></span>
                             {% else %}
-                                <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
-                                <span class="glyphicon glyphicon-log-in"></span>
-                                <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>
+                                <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+                                    <span class="glyphicon glyphicon-log-in"></span>
+                                </a>
+                                <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
                             {% endif %}
                         </div>
-                    </ul>
-                </div>
+                    </li>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
 
-        {% block alerts %}
+    {% block alerts %}
 
-            {% for type, flash_messages in app.session.flashBag.all %}
-                {% for flash_message in flash_messages %}
+        {% for type, flash_messages in app.session.flashBag.all %}
+            {% for flash_message in flash_messages %}
 
-                    <div class="alert alert-{{ type }} alert-dismissible fade in">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>{{ flash_message }}</strong>
-                    </div>
+                <div class="alert alert-{{ type }} alert-dismissible fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ flash_message }}</strong>
+                </div>
 
-                {% endfor %}
             {% endfor %}
+        {% endfor %}
 
-        {% endblock %}
-
-
-        {#BODY#}
-        {% block body %}{% endblock %}
-
-        {#FOOTER#}
-        <footer id="foot" class="container-fluid text-center">
-            <p>Shopping planner &reg;. All rights reserved</p>
-        </footer>
-
-        {#JAVASCRIPTS#}
-        {% block javascripts %}
-        {% endblock %}
+    {% endblock %}
 
 
-    </div>
+    {#BODY#}
+    {% block body %}{% endblock %}
+
+    {#FOOTER#}
+    <footer id="foot" class="container-fluid text-center">
+        <p>Shopping planner &reg;. All rights reserved</p>
+    </footer>
+
+    {#JAVASCRIPTS#}
+    {% block javascripts %}
+    {% endblock %}
+
+
+</div>
 </body>
 </html>
