@@ -126,6 +126,9 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            {% if 0 != newAlerts %}
+                                <span class="glyphicon glyphicon glyphicon-bell text-danger"></span>
+                            {% endif %}
                             <span class="glyphicon glyphicon-user"></span>
                             <span class="caret"></span>
                         </a>
@@ -133,8 +136,13 @@
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                                 <a href="{{ path('alertList') }}">
                                     <nobr>
+                                        <span class="text-danger">
                                         Powiadomienia
                                         <span class="glyphicon glyphicon-alert"></span>
+                                            {% if 0 != newAlerts %}
+                                                <span class="text-warning">({{ newAlerts }})</span>
+                                            {% endif %}
+                                        </span>
                                     </nobr>
                                 </a>
                                 <br>

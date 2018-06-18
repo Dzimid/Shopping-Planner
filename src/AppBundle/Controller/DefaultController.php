@@ -345,4 +345,16 @@ class DefaultController extends Controller
 
         return $this->redirectToRoute('alertList');
     }
+
+    /**
+     * @return array
+     */
+    public function getNewAlertsNum()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        return $em
+            ->getRepository(Alert::class)
+            ->getNotReadNum($this->getUser());
+    }
 }

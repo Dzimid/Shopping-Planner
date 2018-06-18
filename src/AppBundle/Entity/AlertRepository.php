@@ -28,6 +28,6 @@ class AlertRepository extends EntityRepository
                 ':status' => 1
             ])
             ->getQuery()
-            ->getResult();
+            ->getResult()[0][1];
     }
 }
