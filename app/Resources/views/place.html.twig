@@ -30,37 +30,61 @@
                 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
             </script>
         </div>
-        
-        <div class="col-sm-4" style="background-color: white; border: 2px solid black">
 
-            <h4>Użytkownicy:</h4>
 
-            {% for user in usersInPlace %}
-                {{ user.username }}
-                <a href="{{ path('removeUserFromPlace', {'place': placeInfo.id, 'user': user.id}) }}"
-                   style="color: red;">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a>
+        {% if( app.user.username == placeInfo.moderator) %}
+            <div class="col-sm-4" style="background-color: white; border: 2px solid black">
+
+                <h4>Użytkownicy:</h4>
+
+                {% for user in usersInPlace %}
+                    {{ user.username }}
+                    <a href="{{ path('removeUserFromPlace', {'place': placeInfo.id, 'user': user.id}) }}"
+                       style="color: red;">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                    <br>
+                {% endfor %}
+
+                <hr>
+                {{ form(userForm) }}
+                <hr>
+
+                <h4>Przedmioty:</h4>
+
+                {% for item in itemsInPlace %}
+                    {{ item.name }}
+                    <a href="{{ path('removeItemFromPlace', {'item': item.id, 'place': placeInfo.id}) }}"
+                       style="color: red;">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                    <br>
+                {% endfor %}
+
+                {{ form(itemForm) }}
+            </div>
+        {% else %}
+            <div class="col-sm-4" style="background-color: white; border: 2px solid black">
+
+                <h4>Użytkownicy:</h4>
+
+                {% for user in usersInPlace %}
+                    {{ user.username }}
+                    <br>
+                {% endfor %}
+                <hr>
+                <h4>Przedmioty:</h4>
+
+                {% for item in itemsInPlace %}
+                    {{ item.name }}
+
+                    <br>
+                {% endfor %}
                 <br>
-            {% endfor %}
 
-            <hr>
-            {{ form(userForm) }}
-            <hr>
+            </div>
+        {% endif %}
 
-            <h4>Przedmioty:</h4>
-
-            {% for item in itemsInPlace %}
-                {{ item.name }}
-                <a href="{{ path('removeItemFromPlace', {'item': item.id, 'place': placeInfo.id}) }}"
-                   style="color: red;">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a>
-                <br>
-            {% endfor %}
-
-            {{ form(itemForm) }}
-        </div>
         <div class="col-sm-12">
             <h2>Siatka</h2>
             <div class="table-responsive">

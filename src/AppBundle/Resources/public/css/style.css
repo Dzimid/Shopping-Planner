@@ -61,8 +61,10 @@
 }
 
 .subpages_picture{
-    height: 150px;
-    width: 1140px;
+    height: auto;
+    width: auto;
+    min-height: 150px;
+    max-width: 100%;
     background-image: url("../img/subpagesPicture.jpg");
     background-position-y: 40%;
     background-position-x: 50%;
