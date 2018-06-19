@@ -17,11 +17,53 @@
     color: white;
 }
 
+/*.font1{*/
+    /*font-size: 70px;*/
+    /*text-shadow: 0px 0 white, 0 1px white, 0px 0 white, 0 -1px white;*/
+    /*!*font-weight: bold;*!*/
+    /*color: black;*/
+/*}*/
+
 .font1{
-    font-size: 70px;
-    text-shadow: 0px 0 white, 0 1px white, 0px 0 white, 0 -1px white;
-    /*font-weight: bold;*/
-    color: black;
+    background: black;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 50px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.baseLink{
+    display: block;
+    color: white;
+    text-decoration: none;
+    position: relative;
+    width: 60%;
+}
+
+a.baseLink::after{
+    content: "";
+    background: white;
+    mix-blend-mode: exclusion;
+    width: calc(100% + 20px);
+    height: 0;
+    position: absolute;
+    bottom: -4px;
+    left: -10px;
+    transition: all .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+a.baseLink:hover::after{
+    height: calc(100% + 8px)
+}
+
+a.baseLink:active, a.baseLink:visited, a.baseLink:link, a.baseLink:hover{
+    text-decoration: none;
+    color:white;
 }
 
 .font2{
@@ -61,8 +103,10 @@
 }
 
 .subpages_picture{
-    height: 150px;
-    width: 1140px;
+    height: auto;
+    width: auto;
+    min-height: 150px;
+    max-width: 100%;
     background-image: url("../img/subpagesPicture.jpg");
     background-position-y: 40%;
     background-position-x: 50%;
@@ -97,6 +141,10 @@
     text-decoration: none;
 }
 
+.placesLinkStyle:link{
+    text-decoration: none;
+}
+
 .button {
     display: inline-block;
     border: none;
@@ -124,9 +172,6 @@
 
 .button:focus {
     background: #555555;
-}
-
-.button:focus {
     outline: 1px solid #fff;
     outline-offset: -4px;
 }
@@ -136,7 +181,10 @@
     color: white;
 }
 
-
+.button:link, .button:visited{
+    text-decoration: none;
+    color: white;
+}
 
 /*Group Info*/
 .groupInfo{
@@ -147,6 +195,13 @@
     color: black;
 }
 /*Group Info*/
+
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+}
 
 
 

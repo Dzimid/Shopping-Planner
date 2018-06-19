@@ -77,6 +77,7 @@ class ModeratorController extends Controller
 
         $em->remove($place);
         $em->flush();
+        $this->addFlash('info', 'Usunięto miejsce');
 
         return $this->redirectToRoute('places_page');
     }

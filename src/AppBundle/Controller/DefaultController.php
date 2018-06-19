@@ -202,6 +202,7 @@ class DefaultController extends Controller
         $em->remove($purchase);
         $em->flush();
 
+        $this->addFlash('info', 'Cofnięto zakup');
         return $this->redirectToRoute('place_page', [
             'place' => $place->getId()
         ]);

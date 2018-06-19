@@ -38,6 +38,7 @@
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>#}
     <script src="{{ asset('bundles/app/js/bootstrap.min.js') }}"></script>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
 
     <style>
         /* jssor slider loading skin spin css */
@@ -99,10 +100,10 @@
 
 
     {% block slajder_container %}
-        <div class="subpages_picture  text-center">
-            <a href="{{ path('home_page') }}">
-                <span class="font1">Shopping Planner</span>
-            </a>
+        <div class="subpages_picture text-center">
+            <p><a class="baseLink font1" href="{{ path('home_page') }}">
+                Shopping Planner
+            </a></p>
         </div>
     {% endblock %}
 
